@@ -75,6 +75,20 @@ enum ProductChecklistCompletionSource {
   MANUAL
 }
 
+enum CommerceExtensionStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum ProductConfigurationStatus {
+  DRAFT
+  COMPLETED
+  ABANDONED
+  EXPIRED
+}
+
 model User {
   id                 String                   @id @default(uuid()) @db.Uuid
   email              String                   @unique @db.VarChar(320)
@@ -111,12 +125,193 @@ model Product {
   category          ProductCategory?         @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   attributeValues   ProductAttributeValue[]
   checklistStatuses ProductChecklistStatus[]
+  addonServices     ProductAddonService[]
+  bundleRules       ProductBundleRule[]
+  configurations    ProductConfiguration[]
+  giftBoxes         ProductGiftBox[]
+  logistics         ProductLogistics?
   labels            ProductLabel[]
   media             ProductMedia[]
 
   @@index([categoryId, status])
   @@index([publicationState])
   @@map("products")
+}
+
+model GiftBox {
+  id             String                  @id @default(uuid()) @db.Uuid
+  name           String                  @db.VarChar(255)
+  description    String?                 @db.Text
+  material       String?                 @db.VarChar(255)
+  dimensions     String?                 @db.VarChar(100)
+  length         Decimal?                @db.Decimal(12, 2)
+  width          Decimal?                @db.Decimal(12, 2)
+  height         Decimal?                @db.Decimal(12, 2)
+  weight         Decimal?                @db.Decimal(12, 2)
+  dimensionUnit  String                  @default("CM") @map("dimension_unit") @db.Char(3)
+  weightUnit     String                  @default("KG") @map("weight_unit") @db.Char(3)
+  price          Decimal                 @db.Decimal(18, 2)
+  currency       String                  @default("IRR") @db.Char(3)
+  status         CommerceExtensionStatus @default(DRAFT)
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+  images         GiftBoxMedia[]
+  configurations ProductConfiguration[]
+  productOptions ProductGiftBox[]
+
+  @@index([status])
+  @@map("gift_boxes")
+}
+
+model GiftBoxMedia {
+  id             String   @id @default(uuid()) @db.Uuid
+  giftBoxId      String   @map("gift_box_id") @db.Uuid
+  mediaReference String   @map("media_reference") @db.VarChar(500)
+  altText        String?  @map("alt_text") @db.VarChar(500)
+  sortOrder      Int      @default(0) @map("sort_order")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  giftBox        GiftBox  @relation(fields: [giftBoxId], references: [id], onDelete: Cascade)
+
+  @@unique([giftBoxId, mediaReference])
+  @@index([giftBoxId, sortOrder])
+  @@map("gift_box_media")
+}
+
+model AddonService {
+  id                  String                             @id @default(uuid()) @db.Uuid
+  name                String                             @db.VarChar(255)
+  description         String?                            @db.Text
+  type                String                             @db.VarChar(100)
+  configurationSchema Json?                              @map("configuration_schema") @db.JsonB
+  price               Decimal                            @db.Decimal(18, 2)
+  currency            String                             @default("IRR") @db.Char(3)
+  status              CommerceExtensionStatus            @default(DRAFT)
+  createdAt           DateTime                           @default(now()) @map("created_at")
+  updatedAt           DateTime                           @updatedAt @map("updated_at")
+  configurationItems  ProductConfigurationAddonService[]
+  productOptions      ProductAddonService[]
+
+  @@index([status, type])
+  @@map("addon_services")
+}
+
+model ProductGiftBox {
+  productId String   @map("product_id") @db.Uuid
+  giftBoxId String   @map("gift_box_id") @db.Uuid
+  isDefault Boolean  @default(false) @map("is_default")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  giftBox   GiftBox  @relation(fields: [giftBoxId], references: [id], onDelete: Restrict)
+
+  @@id([productId, giftBoxId])
+  @@index([giftBoxId])
+  @@map("product_gift_boxes")
+}
+
+model ProductAddonService {
+  productId      String       @map("product_id") @db.Uuid
+  addonServiceId String       @map("addon_service_id") @db.Uuid
+  isDefault      Boolean      @default(false) @map("is_default")
+  sortOrder      Int          @default(0) @map("sort_order")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  addonService   AddonService @relation(fields: [addonServiceId], references: [id], onDelete: Restrict)
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, addonServiceId])
+  @@index([addonServiceId])
+  @@map("product_addon_services")
+}
+
+model ProductConfiguration {
+  id                  String                             @id @default(uuid()) @db.Uuid
+  productId           String                             @map("product_id") @db.Uuid
+  giftBoxId           String?                            @map("gift_box_id") @db.Uuid
+  personalizationData Json?                              @map("personalization_data") @db.JsonB
+  externalReference   String?                            @unique @map("external_reference") @db.VarChar(100)
+  status              ProductConfigurationStatus         @default(DRAFT)
+  expiresAt           DateTime?                          @map("expires_at")
+  createdAt           DateTime                           @default(now()) @map("created_at")
+  updatedAt           DateTime                           @updatedAt @map("updated_at")
+  addonServices       ProductConfigurationAddonService[]
+  giftBox             GiftBox?                           @relation(fields: [giftBoxId], references: [id], onDelete: SetNull)
+  product             Product                            @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([productId, status])
+  @@index([expiresAt])
+  @@map("product_configurations")
+}
+
+model ProductConfigurationAddonService {
+  configurationId   String               @map("configuration_id") @db.Uuid
+  addonServiceId    String               @map("addon_service_id") @db.Uuid
+  configurationData Json?                @map("configuration_data") @db.JsonB
+  createdAt         DateTime             @default(now()) @map("created_at")
+  addonService      AddonService         @relation(fields: [addonServiceId], references: [id], onDelete: Restrict)
+  configuration     ProductConfiguration @relation(fields: [configurationId], references: [id], onDelete: Cascade)
+
+  @@id([configurationId, addonServiceId])
+  @@index([addonServiceId])
+  @@map("product_configuration_addon_services")
+}
+
+model ProductBundleRule {
+  id                  String                  @id @default(uuid()) @db.Uuid
+  productId           String?                 @map("product_id") @db.Uuid
+  code                String                  @unique @db.VarChar(150)
+  name                String                  @db.VarChar(255)
+  description         String?                 @db.Text
+  conditionDefinition Json                    @map("condition_definition") @db.JsonB
+  actionDefinition    Json                    @map("action_definition") @db.JsonB
+  priority            Int                     @default(0)
+  status              CommerceExtensionStatus @default(DRAFT)
+  startsAt            DateTime?               @map("starts_at")
+  endsAt              DateTime?               @map("ends_at")
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+  product             Product?                @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, status, priority])
+  @@index([startsAt, endsAt])
+  @@map("product_bundle_rules")
+}
+
+model ProductLogistics {
+  productId           String   @id @map("product_id") @db.Uuid
+  length              Decimal? @db.Decimal(12, 2)
+  width               Decimal? @db.Decimal(12, 2)
+  height              Decimal? @db.Decimal(12, 2)
+  weight              Decimal? @db.Decimal(12, 2)
+  packageLength       Decimal? @map("package_length") @db.Decimal(12, 2)
+  packageWidth        Decimal? @map("package_width") @db.Decimal(12, 2)
+  packageHeight       Decimal? @map("package_height") @db.Decimal(12, 2)
+  packageWeight       Decimal? @map("package_weight") @db.Decimal(12, 2)
+  finalShippingWeight Decimal? @map("final_shipping_weight") @db.Decimal(12, 2)
+  dimensionUnit       String   @default("CM") @map("dimension_unit") @db.Char(3)
+  weightUnit          String   @default("KG") @map("weight_unit") @db.Char(3)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  product             Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_logistics")
+}
+
+model ProductExperienceEventDefinition {
+  id              String   @id @default(uuid()) @db.Uuid
+  code            String   @unique @db.VarChar(150)
+  name            String   @db.VarChar(255)
+  description     String?  @db.Text
+  payloadSchema   Json?    @map("payload_schema") @db.JsonB
+  isAnonymousOnly Boolean  @default(true) @map("is_anonymous_only")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive])
+  @@map("product_experience_event_definitions")
 }
 
 model ProductCategory {

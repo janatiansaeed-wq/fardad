@@ -44,6 +44,27 @@ not seed product, category, attribute, media, label, price, inventory, or
 business-permission data. The default active weights total 100% and exclude
 sales/inventory checks until those domains are approved.
 
+## Product Experience & Commerce Extension Foundation
+
+| Table | Key columns | Purpose |
+|---|---|---|
+| `gift_boxes` | identity, material, dimensions, weight, price, currency, status | Independent reusable packaging asset; does not depend on a single product. |
+| `gift_box_media` | `gift_box_id`, `media_reference`, `alt_text`, `sort_order` | Provider-neutral images for a gift box. |
+| `addon_services` | `name`, `type`, `configuration_schema`, price, status | Extensible optional service definition; `type` and JSON schema avoid hard-coded service options. |
+| `product_gift_boxes` | `product_id`, `gift_box_id`, default/order fields | Available gift-box options for a product. |
+| `product_addon_services` | `product_id`, `addon_service_id`, default/order fields | Available add-on options for a product. |
+| `product_configurations` | `product_id`, `gift_box_id`, `personalization_data`, status | Future order-integration configuration root, with no customer or checkout relation. |
+| `product_configuration_addon_services` | `configuration_id`, `addon_service_id`, `configuration_data` | Selected add-on service and structured input within a configuration. |
+| `product_bundle_rules` | `code`, `condition_definition`, `action_definition`, status | Generic smart-offer rule representation; not a discount or pricing engine. |
+| `product_logistics` | product/package dimensions and weights, final shipping weight | One-to-one shipping and travel-assistance measurement foundation. |
+| `product_experience_event_definitions` | `code`, `payload_schema`, anonymous/active flags | Privacy-oriented event definitions only; raw interaction events are deferred. |
+
+WO-006 rebalances the Product checklist to retain a 100% total and seeds five
+critical logistics rules. It also seeds six anonymous event definitions:
+GiftBoxViewed, GiftBoxSelected, AddonSelected, ProductConfigurationStarted,
+ProductConfigurationCompleted, and ConfigurationAbandoned. No interaction data
+or personally identifiable analytics data is stored.
+
 All authentication IDs use UUIDs. Table and column mappings use `snake_case`.
 Future approved work orders must extend this dictionary for every new model,
 including indexes, relations, ownership, retention requirements, and

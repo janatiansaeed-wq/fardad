@@ -8,4 +8,5 @@ export interface ProductDataQualityResult {
   completionPercentage: number;
   isPublicationReady: boolean;
   missingRequiredFields: ProductDataQualityMissingRule[];
+  status: "PASS" | "FAIL";
 }

@@ -28,6 +28,7 @@ const productQualityContext = Prisma.validator<Prisma.ProductDefaultArgs>()({
         type: true,
       },
     },
+    logistics: true,
     checklistStatuses: {
       select: {
         isCompleted: true,

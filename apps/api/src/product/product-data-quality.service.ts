@@ -35,6 +35,7 @@ export class ProductDataQualityService {
       completionPercentage: totalWeight === 0 ? 0 : Math.round((completedWeight / totalWeight) * 100),
       isPublicationReady: !missingRequiredFields.some((rule) => rule.isCritical),
       missingRequiredFields,
+      status: missingRequiredFields.some((rule) => rule.isCritical) ? "FAIL" : "PASS",
     };
   }
 
@@ -58,6 +59,19 @@ export class ProductDataQualityService {
       "media.lifestyle-image": hasMediaType(product, ProductMediaType.LIFESTYLE_IMAGE),
       "media.main-image": hasMediaType(product, ProductMediaType.MAIN_IMAGE),
       "media.packaging-image": hasMediaType(product, ProductMediaType.PACKAGING_IMAGE),
+      "logistics.final-shipping-weight": hasPositiveValue(product.logistics?.finalShippingWeight),
+      "logistics.package-dimensions": hasDimensions(
+        product.logistics?.packageLength,
+        product.logistics?.packageWidth,
+        product.logistics?.packageHeight,
+      ),
+      "logistics.package-weight": hasPositiveValue(product.logistics?.packageWeight),
+      "logistics.product-dimensions": hasDimensions(
+        product.logistics?.length,
+        product.logistics?.width,
+        product.logistics?.height,
+      ),
+      "logistics.product-weight": hasPositiveValue(product.logistics?.weight),
       "seo.meta-description": hasText(product.metaDescription),
       "seo.meta-title": hasText(product.metaTitle),
     };
@@ -92,6 +106,18 @@ function hasMediaType(product: ProductQualityContext, type: ProductMediaType): b
 
 function hasText(value: string | null | undefined): boolean {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasDimensions(
+  length: Prisma.Decimal | null | undefined,
+  width: Prisma.Decimal | null | undefined,
+  height: Prisma.Decimal | null | undefined,
+): boolean {
+  return hasPositiveValue(length) && hasPositiveValue(width) && hasPositiveValue(height);
+}
+
+function hasPositiveValue(value: Prisma.Decimal | null | undefined): boolean {
+  return value !== null && value !== undefined && value.greaterThan(0);
 }
 
 function hasMeaningfulJsonValue(value: Prisma.JsonValue): boolean {

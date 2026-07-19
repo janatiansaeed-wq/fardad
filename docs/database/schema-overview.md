@@ -13,10 +13,10 @@ applications and shared packages must access data only through the versioned API
 
 ## Current Foundation
 
-The schema contains authentication, RBAC, and Product Domain foundations plus
-PostgreSQL datasource and Prisma client generator. No cart, checkout, customer
-management, inventory, order, payment, CMS, or marketing-campaign model is
-present.
+The schema contains authentication, RBAC, Product Domain, and Product
+Experience foundations plus PostgreSQL datasource and Prisma client generator.
+No cart, checkout, customer management, inventory, order, payment, CMS, or
+marketing-campaign workflow model is present.
 
 ## Authentication Foundation
 
@@ -79,6 +79,34 @@ calculates completion percentage and missing required rules from the current
 database state; it reports a product as publication-ready only when no active
 critical rule is incomplete. Category-specific rules can be added later without
 schema changes.
+
+## Product Experience & Commerce Extension Foundation
+
+| Prisma model | PostgreSQL table | Purpose |
+|---|---|---|
+| `GiftBox` / `GiftBoxMedia` | `gift_boxes` / `gift_box_media` | Independent reusable gift packaging assets with dimensions, weight, base price, status, and provider-neutral images |
+| `AddonService` | `addon_services` | Configurable service definition with generic type, optional input schema, base price, and status |
+| `ProductGiftBox` | `product_gift_boxes` | Available gift-box options per product |
+| `ProductAddonService` | `product_addon_services` | Available add-on service options per product |
+| `ProductConfiguration` | `product_configurations` | Future-order-ready product + optional gift box + personalization configuration record |
+| `ProductConfigurationAddonService` | `product_configuration_addon_services` | Add-on services selected within a stored configuration |
+| `ProductBundleRule` | `product_bundle_rules` | Extensible JSON condition/action foundation for offers; no pricing execution |
+| `ProductLogistics` | `product_logistics` | One-to-one physical, packaging, and final shipping measurements |
+| `ProductExperienceEventDefinition` | `product_experience_event_definitions` | Anonymous analytics event metadata only; no event collection payloads |
+
+WO-006 treats gift boxes, add-ons, and logistics as extensions rather than
+fields owned by the Product core. Product availability is represented through
+relations, not hard-coded option columns. Bundle conditions/actions and
+personalization are structured JSON contracts for later approved engines.
+
+The existing Product quality evaluator now includes positive product dimensions,
+product weight, package dimensions, package weight, and final shipping weight.
+The active weighted checklist remains 100% after rebalancing; missing critical
+logistics data returns a `FAIL` validation status and prevents readiness.
+
+The migration seeds only generic logistics quality rules and anonymous event
+definitions. It does not seed gift boxes, add-ons, product options, bundle
+rules, offers, discounts, price calculations, or analytics events.
 
 ## Future Entity Standard
 
