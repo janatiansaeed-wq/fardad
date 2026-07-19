@@ -13,9 +13,10 @@ applications and shared packages must access data only through the versioned API
 
 ## Current Foundation
 
-The schema contains the authentication and RBAC foundations plus PostgreSQL
-datasource and Prisma client generator. No commerce, customer, content,
-inventory, order, or payment model is present.
+The schema contains authentication, RBAC, and Product Domain foundations plus
+PostgreSQL datasource and Prisma client generator. No cart, checkout, customer
+management, inventory, order, payment, CMS, or marketing-campaign model is
+present.
 
 ## Authentication Foundation
 
@@ -50,6 +51,34 @@ waiting for a token to expire.
 
 Business entities and business-specific permissions remain deferred to their
 approved work orders.
+
+## Product Domain Foundation
+
+| Prisma model | PostgreSQL table | Purpose |
+|---|---|---|
+| `Product` | `products` | Draft-capable product identity, content, classification, publication state, and SEO metadata foundation |
+| `ProductCategory` | `product_categories` | Hierarchical, independently sluggable category tree |
+| `ProductAttributeGroup` | `product_attribute_groups` | Ordered grouping for reusable attribute definitions |
+| `ProductAttribute` | `product_attributes` | Dynamic typed attribute definition |
+| `CategoryAttribute` | `category_attributes` | Category-specific attribute requirement and ordering |
+| `ProductAttributeValue` | `product_attribute_values` | JSONB value for one product/attribute pair |
+| `ProductLabel` | `product_labels` | Fixed Product labels: New, Featured, Best Seller, Manager Recommendation, and Campaign |
+| `ProductMedia` | `product_media` | Ordered product media references and SEO metadata; files remain owned by the future Media Service |
+| `ProductChecklistRule` | `product_checklist_rules` | Weighted data-quality and publication-readiness rules |
+| `ProductChecklistStatus` | `product_checklist_statuses` | Per-product persisted checklist status/audit foundation |
+
+WO-005 seeds only domain-intrinsic checklist rules that total 100%. The rules
+cover basic content, classification, category-required attributes, required
+media and media alt text, and product SEO metadata. It deliberately creates no
+price, stock, shipping, corporate-gift, cart, checkout, order, payment, or
+campaign workflow model. Sales and inventory quality checks must be introduced
+only with their approved domain work orders.
+
+Draft products may omit publication-critical content. The Product service
+calculates completion percentage and missing required rules from the current
+database state; it reports a product as publication-ready only when no active
+critical rule is incomplete. Category-specific rules can be added later without
+schema changes.
 
 ## Future Entity Standard
 
