@@ -1,0 +1,16 @@
+{
+  "name": "@fardad/ui",
+  "version": "1.0.0",
+  "private": true,
+  "exports": { "./*": "./src/*.tsx" },
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@fardad/utils": "workspace:*",
+    "next": "^15.5.7",
+    "react": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "typescript": "^5.9.2"
+  }
+}

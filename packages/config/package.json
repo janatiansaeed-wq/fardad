@@ -1,0 +1,8 @@
+{
+  "name": "@fardad/config",
+  "version": "1.0.0",
+  "private": true,
+  "exports": { "./*": "./src/*.ts" },
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "devDependencies": { "typescript": "^5.9.2" }
+}

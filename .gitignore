@@ -35,7 +35,7 @@ Thumbs.db
 .turbo
 
 # Prisma
-apps/backend/prisma/dev.db
+apps/api/prisma/dev.db
 
 # Cache
 .cache
@@ -49,6 +49,7 @@ uploads
 
 # Generated
 generated
+*.tsbuildinfo
 
 # Docker
 docker-data

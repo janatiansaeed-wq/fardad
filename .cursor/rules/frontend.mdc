@@ -1,0 +1,158 @@
+---
+description: Frontend Enterprise Rules
+alwaysApply: true
+---
+
+# Frontend Rules
+
+Frontend Stack
+
+Next.js
+
+React 19
+
+TypeScript
+
+TailwindCSS
+
+App Router
+
+-----------------------------------------
+
+RTL First
+
+Persian is default.
+
+Never design LTR pages.
+
+-----------------------------------------
+
+Components
+
+Reusable
+
+Composable
+
+Small
+
+Readable
+
+-----------------------------------------
+
+Server Components
+
+Prefer Server Components.
+
+Use Client Components only when necessary.
+
+-----------------------------------------
+
+Forms
+
+React Hook Form
+
+Zod
+
+Validation
+
+-----------------------------------------
+
+Loading
+
+Skeleton
+
+Streaming
+
+Suspense
+
+-----------------------------------------
+
+Images
+
+Optimized
+
+Responsive
+
+Lazy Loaded
+
+WebP
+
+-----------------------------------------
+
+Typography
+
+Professional Persian typography.
+
+Readable spacing.
+
+Readable hierarchy.
+
+-----------------------------------------
+
+Accessibility
+
+WCAG
+
+Keyboard
+
+ARIA
+
+Contrast
+
+-----------------------------------------
+
+Performance
+
+Dynamic Imports
+
+Caching
+
+Memoization
+
+Image Optimization
+
+-----------------------------------------
+
+Animations
+
+Minimal
+
+Elegant
+
+Luxury
+
+Never excessive.
+
+-----------------------------------------
+
+Design
+
+Premium
+
+Minimal
+
+Luxury
+
+Persian
+
+Corporate
+
+-----------------------------------------
+
+SEO
+
+Semantic HTML
+
+Metadata
+
+JSON-LD
+
+Canonical
+
+Breadcrumb
+
+-----------------------------------------
+
+Rule
+
+Every page should feel like a premium luxury platform.

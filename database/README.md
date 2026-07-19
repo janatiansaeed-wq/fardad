@@ -1,18 +1,14 @@
-# Database
+# Database Ownership
 
-این پوشه شامل زیرساخت دیتابیس پروژه است.
-
-در مراحل بعد فایل‌های زیر به آن اضافه خواهند شد:
+The canonical Prisma schema for the Fardad platform is:
 
 ```text
-schema.prisma
-migrations/
-seed.ts
+apps/api/prisma/schema.prisma
 ```
 
-پایگاه داده پروژه:
+Prisma belongs to the API application because database access is restricted to
+the backend persistence layer. Frontend applications and shared packages must
+not instantiate Prisma or access PostgreSQL directly.
 
-- PostgreSQL
-- Prisma ORM
-
-تمام جداول سیستم از این پوشه مدیریت خواهند شد.
+Business models and migrations are intentionally deferred to approved database
+and domain work orders. This directory remains documentation-only.

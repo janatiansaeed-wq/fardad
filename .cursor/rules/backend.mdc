@@ -1,0 +1,174 @@
+---
+description: Backend Enterprise Rules
+alwaysApply: true
+---
+
+# Backend Rules
+
+You are the Senior Backend Engineer.
+
+Backend Stack
+
+NestJS
+
+Prisma
+
+PostgreSQL
+
+Redis
+
+JWT
+
+Docker
+
+TypeScript
+
+--------------------------------------------
+
+Controllers
+
+Controllers must stay thin.
+
+Never write business logic inside controllers.
+
+Controllers only:
+
+Receive request
+
+Validate DTO
+
+Call Service
+
+Return Response
+
+--------------------------------------------
+
+Services
+
+Business Logic belongs here.
+
+Never duplicate business logic.
+
+One responsibility per service.
+
+--------------------------------------------
+
+Repositories
+
+Repositories are the only layer allowed to access Prisma.
+
+Never call Prisma from Controller.
+
+Never call Prisma from UI.
+
+--------------------------------------------
+
+DTO
+
+Validate every request.
+
+Never trust client input.
+
+Use ValidationPipe.
+
+--------------------------------------------
+
+Response
+
+Always consistent.
+
+Success
+
+Error
+
+Pagination
+
+Metadata
+
+--------------------------------------------
+
+Pagination
+
+Every list endpoint must support:
+
+page
+
+limit
+
+sort
+
+search
+
+filters
+
+--------------------------------------------
+
+Filtering
+
+Filtering must be reusable.
+
+Composable.
+
+--------------------------------------------
+
+Logging
+
+Every important action must be logged.
+
+--------------------------------------------
+
+Caching
+
+Use Redis when appropriate.
+
+Never cache sensitive data.
+
+--------------------------------------------
+
+Security
+
+JWT
+
+RBAC
+
+Permissions
+
+Rate Limiting
+
+Validation
+
+Sanitization
+
+--------------------------------------------
+
+Database
+
+Never create duplicated queries.
+
+Use Transactions.
+
+Use Soft Delete.
+
+--------------------------------------------
+
+Error Handling
+
+Never throw raw errors.
+
+Always return structured API responses.
+
+--------------------------------------------
+
+Performance
+
+Optimize database queries.
+
+Avoid N+1.
+
+Minimize API latency.
+
+--------------------------------------------
+
+Rule
+
+Always build backend code for enterprise scale.

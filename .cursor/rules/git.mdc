@@ -1,0 +1,42 @@
+---
+description: Git Workflow Rules
+alwaysApply: true
+---
+
+# Git Rules
+
+Never modify unrelated files.
+
+Always analyze repository before changes.
+
+Keep commits small.
+
+Keep commits meaningful.
+
+Never delete code without reason.
+
+Never rename folders unless instructed.
+
+Prefer improving existing architecture.
+
+Always preserve project consistency.
+
+Never introduce breaking changes.
+
+Before implementing:
+
+Analyze
+
+Plan
+
+Implement
+
+Review
+
+Then commit.
+
+Every implementation should be production-ready.
+
+Never create temporary code.
+
+Never create fake implementations.

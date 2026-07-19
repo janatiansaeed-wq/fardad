@@ -19,11 +19,9 @@
 
 ## Applications
 
-- Backend API
-- Storefront
-- Admin Panel
-- Corporate Portal
-- Mobile API
+- `apps/web` — Next.js storefront shell
+- `apps/admin` — Next.js administration shell
+- `apps/api` — canonical NestJS API and Prisma owner
 
 ---
 
@@ -31,7 +29,14 @@
 
 ```text
 apps/
+  web/
+  admin/
+  api/
 packages/
+  ui/
+  types/
+  config/
+  utils/
 docs/
 ```
 
@@ -48,3 +53,5 @@ pnpm build
 
 pnpm test
 ```
+
+Business features are implemented only through approved work orders.

@@ -1,0 +1,132 @@
+---
+description: Enterprise Coding Standards
+alwaysApply: true
+---
+
+# Coding Standards
+
+Always write production quality code.
+
+------------------------------------------------
+
+Strict TypeScript
+
+Never use any.
+
+Prefer interfaces.
+
+Prefer readonly.
+
+------------------------------------------------
+
+Functions
+
+Small
+
+Reusable
+
+Pure when possible
+
+Readable
+
+------------------------------------------------
+
+SOLID
+
+Single Responsibility
+
+Open Closed
+
+Liskov
+
+Interface Segregation
+
+Dependency Inversion
+
+------------------------------------------------
+
+DRY
+
+Never duplicate code.
+
+------------------------------------------------
+
+KISS
+
+Prefer simple solutions.
+
+Never create unnecessary complexity.
+
+------------------------------------------------
+
+Naming
+
+Meaningful names.
+
+No abbreviations.
+
+English identifiers.
+
+Persian UI.
+
+------------------------------------------------
+
+Files
+
+One responsibility per file.
+
+------------------------------------------------
+
+Comments
+
+Only when necessary.
+
+Code should explain itself.
+
+------------------------------------------------
+
+Imports
+
+Always sorted.
+
+Remove unused imports.
+
+------------------------------------------------
+
+Error Handling
+
+Never ignore exceptions.
+
+Always return meaningful errors.
+
+------------------------------------------------
+
+Logging
+
+Structured.
+
+Useful.
+
+Never log secrets.
+
+------------------------------------------------
+
+Performance
+
+Avoid unnecessary renders.
+
+Avoid duplicated queries.
+
+Use caching.
+
+------------------------------------------------
+
+Testing
+
+Write code that is testable.
+
+------------------------------------------------
+
+Rule
+
+Readable code is more valuable than clever code.
