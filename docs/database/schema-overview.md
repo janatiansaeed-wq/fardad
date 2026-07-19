@@ -13,13 +13,22 @@ applications and shared packages must access data only through the versioned API
 
 ## Current Foundation
 
-The schema contains only:
+The schema contains the authentication foundation plus PostgreSQL datasource and
+Prisma client generator. No commerce, customer, content, inventory, order, or
+payment model is present.
 
-- a PostgreSQL datasource configured by `DATABASE_URL`;
-- a Prisma client generator; and
-- no data models, relations, enums, migrations, or seed data.
+## Authentication Foundation
 
-Business entities are intentionally deferred to their approved work orders.
+| Prisma model | PostgreSQL table | Purpose |
+|---|---|---|
+| `User` | `users` | Authentication identity and initial role value |
+| `PasswordCredential` | `password_credentials` | Password hash, lock state, and password security metadata |
+| `AuthSession` | `auth_sessions` | Device/session lifecycle and revocation state |
+| `RefreshToken` | `refresh_tokens` | Hashed rotating refresh-token records |
+| `OtpRequest` | `otp_requests` | Hashed OTP challenge preparation; delivery is not implemented |
+
+RBAC role/permission tables are deferred to WO-004. Business entities remain
+deferred to their approved work orders.
 
 ## Future Entity Standard
 
