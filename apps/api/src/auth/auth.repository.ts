@@ -1,14 +1,36 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, UserRole } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../database";
 
 const userWithCredential = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: {
     passwordCredential: true,
+    roleAssignments: {
+      include: {
+        role: {
+          select: {
+            code: true,
+          },
+        },
+      },
+      orderBy: {
+        role: {
+          code: "asc",
+        },
+      },
+    },
   },
 });
 
 export type UserWithCredential = Prisma.UserGetPayload<typeof userWithCredential>;
+
+export interface AuthIdentity {
+  email: string;
+  id: string;
+  roles: string[];
+}
+
+type RoleAssignedUser = Pick<UserWithCredential, "email" | "id" | "roleAssignments">;
 
 @Injectable()
 export class AuthRepository {
@@ -96,7 +118,24 @@ export class AuthRepository {
       include: {
         session: {
           include: {
-            user: true,
+            user: {
+              include: {
+                roleAssignments: {
+                  include: {
+                    role: {
+                      select: {
+                        code: true,
+                      },
+                    },
+                  },
+                  orderBy: {
+                    role: {
+                      code: "asc",
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -146,11 +185,11 @@ export class AuthRepository {
     });
   }
 
-  toIdentity(user: { email: string; id: string; role: UserRole }) {
+  toIdentity(user: RoleAssignedUser): AuthIdentity {
     return {
       email: user.email,
       id: user.id,
-      role: user.role,
+      roles: user.roleAssignments.map(({ role }) => role.code),
     };
   }
 }

@@ -1,15 +1,13 @@
-import { UserRole } from "@prisma/client";
-
 export interface TokenPayload {
   email: string;
-  role: UserRole;
+  roles: string[];
   sub: string;
   type: "access";
 }
 
 export interface RefreshTokenPayload {
   jti: string;
-  role: UserRole;
+  roles: string[];
   sid: string;
   sub: string;
   type: "refresh";

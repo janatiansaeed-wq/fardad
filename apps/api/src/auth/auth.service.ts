@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Prisma, UserRole } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import { env } from "../config";
 import { AuthRepository, UserWithCredential } from "./auth.repository";
@@ -102,7 +102,7 @@ export class AuthService {
     return {
       email: payload.email,
       id: payload.sub,
-      role: payload.role,
+      roles: payload.roles,
     };
   }
 
@@ -126,22 +126,23 @@ export class AuthService {
   }
 
   private async issueTokens(
-    user: { email: string; id: string; role: UserRole },
+    user: Pick<UserWithCredential, "email" | "id" | "roleAssignments">,
     sessionId: string,
     refreshExpiresAt: Date,
   ) {
     const refreshTokenId = randomUUID();
+    const identity = this.authRepository.toIdentity(user);
     const accessPayload: TokenPayload = {
-      email: user.email,
-      role: user.role,
-      sub: user.id,
+      email: identity.email,
+      roles: identity.roles,
+      sub: identity.id,
       type: "access",
     };
     const refreshPayload: RefreshTokenPayload = {
       jti: refreshTokenId,
-      role: user.role,
+      roles: identity.roles,
       sid: sessionId,
-      sub: user.id,
+      sub: identity.id,
       type: "refresh",
     };
 
@@ -166,7 +167,7 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      user: this.authRepository.toIdentity(user),
+      user: identity,
     };
   }
 
