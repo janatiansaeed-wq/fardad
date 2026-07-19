@@ -43,7 +43,17 @@
 
     "db:generate": "pnpm --filter @fardad/api prisma:generate",
 
+    "db:format": "pnpm --filter @fardad/api db:format",
+
+    "db:validate": "pnpm --filter @fardad/api db:validate",
+
     "db:migrate": "pnpm --filter @fardad/api exec prisma migrate dev",
+
+    "db:migrate:dev": "pnpm --filter @fardad/api db:migrate:dev",
+
+    "db:migrate:deploy": "pnpm --filter @fardad/api db:migrate:deploy",
+
+    "db:migrate:status": "pnpm --filter @fardad/api db:migrate:status",
 
     "db:studio": "pnpm --filter @fardad/api exec prisma studio"
   },
