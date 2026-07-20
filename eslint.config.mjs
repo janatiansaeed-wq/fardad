@@ -8,7 +8,7 @@ const compat = new FlatCompat({
 
 const nextConfigs = compat.extends("next/core-web-vitals").map((config) => ({
   ...config,
-  files: ["apps/admin/**/*.{js,jsx,ts,tsx}", "apps/web/**/*.{js,jsx,ts,tsx}"],
+  files: ["apps/admin/**/*.{js,jsx,ts,tsx}", "apps/storefront/**/*.{js,jsx,ts,tsx}"],
 }));
 
 export default [

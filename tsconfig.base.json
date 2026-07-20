@@ -1,5 +1,16 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fardad/config": ["packages/config/src/index.ts"],
+      "@fardad/config/*": ["packages/config/src/*"],
+      "@fardad/types": ["packages/types/src/index.ts"],
+      "@fardad/types/*": ["packages/types/src/*"],
+      "@fardad/ui": ["packages/ui/src/index.ts"],
+      "@fardad/ui/*": ["packages/ui/src/*"],
+      "@fardad/utils": ["packages/utils/src/index.ts"],
+      "@fardad/utils/*": ["packages/utils/src/*"]
+    },
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",

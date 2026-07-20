@@ -2,7 +2,8 @@
   "name": "@fardad/config",
   "version": "1.0.0",
   "private": true,
-  "exports": { "./*": "./src/*.ts" },
+  "exports": { ".": "./src/index.ts", "./*": "./src/*.ts" },
   "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": { "@fardad/types": "workspace:*" },
   "devDependencies": { "typescript": "^5.9.2" }
 }

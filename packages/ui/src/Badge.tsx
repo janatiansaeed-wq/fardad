@@ -13,7 +13,7 @@ export default function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-dark",
+        "inline-flex items-center rounded-full bg-[var(--ui-color-secondary,#e5e7eb)] px-3 py-1 text-xs font-semibold text-[var(--ui-color-secondary-contrast,#111827)]",
         className
       )}
     >

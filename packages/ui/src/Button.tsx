@@ -15,16 +15,16 @@ export default function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center rounded-luxury px-6 py-3 transition-all duration-300 font-medium",
+        "inline-flex items-center justify-center rounded-[var(--ui-radius-medium,0.75rem)] px-6 py-3 font-medium transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-color-focus,#2563eb)] focus-visible:ring-offset-2",
 
         variant === "primary" &&
-          "bg-primary text-white hover:opacity-90",
+          "bg-[var(--ui-color-primary,#1f2937)] text-[var(--ui-color-primary-contrast,#ffffff)] hover:opacity-90",
 
         variant === "secondary" &&
-          "bg-secondary text-dark hover:opacity-90",
+          "bg-[var(--ui-color-secondary,#e5e7eb)] text-[var(--ui-color-secondary-contrast,#111827)] hover:opacity-90",
 
         variant === "outline" &&
-          "border border-primary text-primary hover:bg-primary hover:text-white",
+          "border border-[var(--ui-color-primary,#1f2937)] text-[var(--ui-color-primary,#1f2937)] hover:bg-[var(--ui-color-primary,#1f2937)] hover:text-[var(--ui-color-primary-contrast,#ffffff)]",
 
         className
       )}

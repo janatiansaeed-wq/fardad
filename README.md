@@ -19,7 +19,7 @@
 
 ## Applications
 
-- `apps/web` — Next.js storefront shell
+- `apps/storefront` — Next.js storefront shell
 - `apps/admin` — Next.js administration shell
 - `apps/api` — canonical NestJS API and Prisma owner
 
@@ -29,7 +29,7 @@
 
 ```text
 apps/
-  web/
+  storefront/
   admin/
   api/
 packages/
@@ -46,11 +46,8 @@ docs/
 
 ```bash
 pnpm install
-
 pnpm dev
-
 pnpm build
-
 pnpm test
 ```
 

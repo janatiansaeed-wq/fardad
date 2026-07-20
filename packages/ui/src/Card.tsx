@@ -13,7 +13,7 @@ export default function Card({
   return (
     <div
       className={cn(
-        "rounded-luxury bg-white shadow-luxury overflow-hidden transition-all duration-300 hover:-translate-y-1",
+        "overflow-hidden rounded-[var(--ui-radius-medium,0.75rem)] bg-[var(--ui-color-surface,#ffffff)] shadow-[var(--ui-shadow-card,0_12px_32px_rgba(0,0,0,0.08))] transition-transform duration-200 hover:-translate-y-1",
         className
       )}
     >
