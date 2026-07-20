@@ -1,8 +1,8 @@
 # WO-013 Pre-Implementation Cart, Order, Pricing, Payment Boundary, and Invoice Architecture Review
 
-> Project: Fardad Enterprise Commerce Platform  
-> Phase: Documentation and architecture review only  
-> Date: 2026-07-20  
+> Project: Fardad Enterprise Commerce Platform
+> Phase: Documentation and architecture review only
+> Date: 2026-07-20
 > Status: REVIEW COMPLETE — COMMERCE IMPLEMENTATION BLOCKED PENDING APPROVALS
 
 ## Executive Summary and Readiness Status
