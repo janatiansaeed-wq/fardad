@@ -4,15 +4,32 @@ export type PublicCategorySummary = Readonly<{
   description?: string;
 }>;
 
+export type PublicProductImage = Readonly<{
+  src: string;
+  alt: string;
+}>;
+
 export type PublicProductCard = Readonly<{
   name: string;
   slug: string;
   shortDescription: string;
   category: Pick<PublicCategorySummary, "name" | "slug">;
-  image: Readonly<{
-    src: string;
-    alt: string;
-  }> | null;
+  image: PublicProductImage | null;
+}>;
+
+export type PublicProductDetail = Readonly<{
+  name: string;
+  englishName?: string;
+  slug: string;
+  shortDescription: string;
+  description: string;
+  category: Pick<PublicCategorySummary, "name" | "slug">;
+  mainImage: PublicProductImage | null;
+  gallery: readonly PublicProductImage[];
+  seo: Readonly<{
+    title?: string;
+    description?: string;
+  }>;
 }>;
 
 export type CatalogPagination = Readonly<{

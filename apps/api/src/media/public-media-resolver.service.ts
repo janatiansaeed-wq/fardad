@@ -17,6 +17,8 @@ const maximumPublicRenditionBytes = 20n * 1024n * 1024n;
 
 const renditionByPurpose: Record<PublicMediaPurpose, MediaRenditionVariant> = {
   card: MediaRenditionVariant.CARD,
+  detail: MediaRenditionVariant.DETAIL,
+  gallery: MediaRenditionVariant.GALLERY,
 };
 
 @Injectable()

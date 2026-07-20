@@ -1,6 +1,6 @@
 import type { Readable } from "node:stream";
 
-export const publicMediaPurposes = ["card"] as const;
+export const publicMediaPurposes = ["card", "detail", "gallery"] as const;
 
 export type PublicMediaPurpose = (typeof publicMediaPurposes)[number];
 

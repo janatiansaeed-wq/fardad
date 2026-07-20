@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { PublicCatalogPageQueryDto } from "./dto/public-catalog-page-query.dto";
 import { PublicCategorySlugParamsDto } from "./dto/public-category-slug.params.dto";
+import { PublicProductSlugParamsDto } from "./dto/public-product-slug.params.dto";
 import { PublicCatalogService } from "./public-catalog.service";
 
 @Controller("public/catalog")
@@ -15,6 +16,11 @@ export class PublicCatalogController {
   @Get("products")
   getProducts(@Query() query: PublicCatalogPageQueryDto) {
     return this.publicCatalogService.getProducts(query.page);
+  }
+
+  @Get("products/:slug")
+  getProductBySlug(@Param() params: PublicProductSlugParamsDto) {
+    return this.publicCatalogService.getProductBySlug(params.slug);
   }
 
   @Get("categories/:slug/products")

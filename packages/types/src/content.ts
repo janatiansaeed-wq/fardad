@@ -52,6 +52,18 @@ export type LocalizedContentProfile = Readonly<{
     missingImageMessage: string;
     loading: string;
   }>;
+  productDetail: Readonly<{
+    breadcrumbLabel: string;
+    productsLabel: string;
+    categoryLabel: string;
+    descriptionHeading: string;
+    galleryHeading: string;
+    missingImageAltTemplate: string;
+    missingImageMark: string;
+    missingImageMessage: string;
+    loading: string;
+    errorTitle: string;
+  }>;
   states: Readonly<{
     loadingTitle: string;
     loadingDescription: string;

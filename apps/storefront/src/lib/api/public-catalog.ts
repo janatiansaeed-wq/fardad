@@ -2,6 +2,7 @@ import "server-only";
 
 import type {
   PublicCategorySummary,
+  PublicProductDetail,
   PublicProductListResponse,
 } from "@fardad/types";
 
@@ -36,11 +37,22 @@ export function normalizeCatalogPage(value: string | string[] | undefined): numb
 }
 
 export async function getPublicCategories(): Promise<readonly PublicCategorySummary[]> {
-  return request<readonly PublicCategorySummary[]>("public/catalog/categories", ["public-catalog-categories"]);
+  return request<readonly PublicCategorySummary[]>("public/catalog/categories", [
+    "public-catalog-categories",
+  ]);
 }
 
 export async function getPublicProducts(page: number): Promise<PublicProductListResponse> {
-  return request<PublicProductListResponse>(`public/catalog/products?page=${page}`, ["public-catalog"]);
+  return request<PublicProductListResponse>(`public/catalog/products?page=${page}`, [
+    "public-catalog",
+  ]);
+}
+
+export async function getPublicProduct(slug: string): Promise<PublicProductDetail> {
+  return request<PublicProductDetail>(`public/catalog/products/${encodeURIComponent(slug)}`, [
+    "public-catalog",
+    `public-product-${slug}`,
+  ]);
 }
 
 export async function getPublicCategoryProducts(

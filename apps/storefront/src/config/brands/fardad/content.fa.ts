@@ -66,6 +66,18 @@ export const fardadLocalizedContentProfile: LocalizedContentProfile = {
     missingImageMessage: "تصویر محصول به‌زودی در دسترس خواهد بود",
     loading: "در حال بارگذاری محصولات",
   },
+  productDetail: {
+    breadcrumbLabel: "مسیر صفحه محصول",
+    productsLabel: "محصولات",
+    categoryLabel: "دسته‌بندی",
+    descriptionHeading: "درباره محصول",
+    galleryHeading: "گالری تصاویر",
+    missingImageAltTemplate: "تصویر محصول {productName} در دسترس نیست",
+    missingImageMark: "ف",
+    missingImageMessage: "تصویر محصول در حال حاضر در دسترس نیست",
+    loading: "در حال بارگذاری اطلاعات محصول",
+    errorTitle: "نمایش اطلاعات محصول با مشکل روبه‌رو شد",
+  },
   states: {
     loadingTitle: "در حال بارگذاری",
     loadingDescription: "لطفاً چند لحظه صبر کنید.",
@@ -85,5 +97,5 @@ export const fardadLocalizedContentProfile: LocalizedContentProfile = {
     robots: { index: true, follow: true },
     openGraphLocale: "fa_IR",
   },
-  provisionalFields: ["shell.footerDescription", "home", "catalog", "seo"],
+  provisionalFields: ["shell.footerDescription", "home", "catalog", "productDetail", "seo"],
 };
