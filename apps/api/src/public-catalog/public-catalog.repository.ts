@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, ProductPublicationState, ProductStatus } from "@prisma/client";
+import { Prisma, ProductMediaType, ProductPublicationState, ProductStatus } from "@prisma/client";
 import { PrismaService } from "../database";
 
 const publicCategorySelect = Prisma.validator<Prisma.ProductCategorySelect>()({
@@ -14,6 +14,18 @@ const publicCatalogCandidateSelect = Prisma.validator<Prisma.ProductSelect>()({
     select: publicCategorySelect,
   },
   id: true,
+  media: {
+    orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+    select: {
+      altText: true,
+      mediaAssetId: true,
+      mediaReference: true,
+    },
+    take: 1,
+    where: {
+      type: ProductMediaType.MAIN_IMAGE,
+    },
+  },
   name: true,
   shortDescription: true,
   slug: true,

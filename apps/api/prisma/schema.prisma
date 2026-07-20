@@ -51,6 +51,33 @@ enum ProductMediaType {
   VIDEO_REFERENCE
 }
 
+enum MediaKind {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  OTHER
+}
+
+enum MediaVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum MediaLifecycleStatus {
+  PENDING
+  READY
+  FAILED
+  QUARANTINED
+  RETIRED
+}
+
+enum MediaRenditionVariant {
+  CARD
+  GALLERY
+  DETAIL
+  THUMBNAIL
+}
+
 enum ProductAttributeDataType {
   TEXT
   NUMBER
@@ -90,16 +117,20 @@ enum ProductConfigurationStatus {
 }
 
 model User {
-  id                 String                   @id @default(uuid()) @db.Uuid
-  email              String                   @unique @db.VarChar(320)
-  isActive           Boolean                  @default(true) @map("is_active")
-  passwordCredential PasswordCredential?
-  roleAssignments    UserRole[]
-  sessions           AuthSession[]
-  checklistStatuses  ProductChecklistStatus[]
-  createdAt          DateTime                 @default(now()) @map("created_at")
-  updatedAt          DateTime                 @updatedAt @map("updated_at")
-  deletedAt          DateTime?                @map("deleted_at")
+  id                     String                   @id @default(uuid()) @db.Uuid
+  email                  String                   @unique @db.VarChar(320)
+  isActive               Boolean                  @default(true) @map("is_active")
+  passwordCredential     PasswordCredential?
+  roleAssignments        UserRole[]
+  sessions               AuthSession[]
+  checklistStatuses      ProductChecklistStatus[]
+  mediaAssetsCreated     MediaAsset[]             @relation("MediaAssetCreatedBy")
+  mediaAssetsUpdated     MediaAsset[]             @relation("MediaAssetUpdatedBy")
+  mediaRenditionsCreated MediaRendition[]         @relation("MediaRenditionCreatedBy")
+  mediaRenditionsUpdated MediaRendition[]         @relation("MediaRenditionUpdatedBy")
+  createdAt              DateTime                 @default(now()) @map("created_at")
+  updatedAt              DateTime                 @updatedAt @map("updated_at")
+  deletedAt              DateTime?                @map("deleted_at")
 
   @@map("users")
 }
@@ -410,6 +441,7 @@ model ProductMedia {
   id             String           @id @default(uuid()) @db.Uuid
   productId      String           @map("product_id") @db.Uuid
   mediaReference String           @map("media_reference") @db.VarChar(500)
+  mediaAssetId   String?          @map("media_asset_id") @db.Uuid
   type           ProductMediaType
   altText        String?          @map("alt_text") @db.VarChar(500)
   title          String?          @db.VarChar(255)
@@ -417,10 +449,72 @@ model ProductMedia {
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @updatedAt @map("updated_at")
   product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaAsset     MediaAsset?      @relation(fields: [mediaAssetId, mediaReference], references: [id, reference], onDelete: Restrict)
 
   @@unique([productId, mediaReference])
   @@index([productId, type, sortOrder])
+  @@index([mediaAssetId])
   @@map("product_media")
+}
+
+model MediaAsset {
+  id                       String               @id @default(uuid(7)) @db.Uuid
+  reference                String               @unique @db.VarChar(45)
+  publicId                 String               @unique @map("public_id") @db.VarChar(22)
+  kind                     MediaKind
+  visibility               MediaVisibility
+  status                   MediaLifecycleStatus
+  verifiedMimeType         String               @map("verified_mime_type") @db.VarChar(100)
+  byteSize                 BigInt               @map("byte_size")
+  width                    Int?
+  height                   Int?
+  checksum                 String               @db.Char(64)
+  originalStorageReference String               @map("original_storage_reference") @db.VarChar(1024)
+  contentVersion           Int                  @default(1) @map("content_version")
+  createdById              String?              @map("created_by_id") @db.Uuid
+  updatedById              String?              @map("updated_by_id") @db.Uuid
+  createdAt                DateTime             @default(now()) @map("created_at")
+  updatedAt                DateTime             @updatedAt @map("updated_at")
+  deletedAt                DateTime?            @map("deleted_at")
+  createdBy                User?                @relation("MediaAssetCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy                User?                @relation("MediaAssetUpdatedBy", fields: [updatedById], references: [id], onDelete: Restrict)
+  productMedia             ProductMedia[]
+  renditions               MediaRendition[]
+
+  @@unique([id, reference])
+  @@index([kind, status])
+  @@index([visibility, status, deletedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("media_assets")
+}
+
+model MediaRendition {
+  id               String                @id @default(uuid(7)) @db.Uuid
+  mediaAssetId     String                @map("media_asset_id") @db.Uuid
+  variant          MediaRenditionVariant
+  contentVersion   Int                   @map("content_version")
+  storageReference String                @map("storage_reference") @db.VarChar(1024)
+  verifiedMimeType String                @map("verified_mime_type") @db.VarChar(100)
+  byteSize         BigInt                @map("byte_size")
+  width            Int
+  height           Int
+  checksum         String                @db.Char(64)
+  status           MediaLifecycleStatus
+  createdById      String?               @map("created_by_id") @db.Uuid
+  updatedById      String?               @map("updated_by_id") @db.Uuid
+  createdAt        DateTime              @default(now()) @map("created_at")
+  updatedAt        DateTime              @updatedAt @map("updated_at")
+  deletedAt        DateTime?             @map("deleted_at")
+  mediaAsset       MediaAsset            @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
+  createdBy        User?                 @relation("MediaRenditionCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy        User?                 @relation("MediaRenditionUpdatedBy", fields: [updatedById], references: [id], onDelete: Restrict)
+
+  @@unique([mediaAssetId, variant, contentVersion])
+  @@index([mediaAssetId, status, deletedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("media_renditions")
 }
 
 model ProductChecklistRule {

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { PublicMediaDescriptor, PublicMediaResolverService } from "../media";
 import { ProductDataQualityService } from "../product";
 import {
   PublicCatalogCandidate,
@@ -36,6 +37,7 @@ type PublicProductListResponse = {
 @Injectable()
 export class PublicCatalogService {
   constructor(
+    private readonly publicMediaResolver: PublicMediaResolverService,
     private readonly productDataQualityService: ProductDataQualityService,
     private readonly publicCatalogRepository: PublicCatalogRepository,
   ) {}
@@ -93,12 +95,22 @@ export class PublicCatalogService {
       })),
     );
 
-    return qualityResults.flatMap(({ candidate, quality }) => {
-      if (!quality.isPublicationReady) {
-        return [];
-      }
+    const publishableCandidates = qualityResults.flatMap(({ candidate, quality }) =>
+      quality.isPublicationReady ? [candidate] : [],
+    );
+    const linkedReferences = publishableCandidates.flatMap((candidate) => {
+      const mainImage = candidate.media[0];
+      return mainImage?.mediaAssetId ? [mainImage.mediaReference] : [];
+    });
+    const resolvedImages = await this.publicMediaResolver.resolveMany(linkedReferences, "card");
 
-      const card = this.toPublicProductCard(candidate);
+    return publishableCandidates.flatMap((candidate) => {
+      const mainImage = candidate.media[0];
+      const resolvedImage = mainImage?.mediaAssetId
+        ? (resolvedImages.get(mainImage.mediaReference) ?? null)
+        : null;
+
+      const card = this.toPublicProductCard(candidate, resolvedImage);
       return card ? [card] : [];
     });
   }
@@ -111,18 +123,27 @@ export class PublicCatalogService {
     };
   }
 
-  private toPublicProductCard(candidate: PublicCatalogCandidate): PublicProductCard | null {
+  private toPublicProductCard(
+    candidate: PublicCatalogCandidate,
+    resolvedImage: PublicMediaDescriptor | null,
+  ): PublicProductCard | null {
     if (!candidate.category || !candidate.name || !candidate.shortDescription || !candidate.slug) {
       return null;
     }
+
+    const explicitAlt = candidate.media[0]?.altText?.trim();
 
     return {
       category: {
         name: candidate.category.name,
         slug: candidate.category.slug,
       },
-      // Media references are provider-neutral internal values. Public delivery is deferred.
-      image: null,
+      image: resolvedImage
+        ? {
+            alt: explicitAlt || candidate.name,
+            src: resolvedImage.src,
+          }
+        : null,
       name: candidate.name,
       shortDescription: candidate.shortDescription,
       slug: candidate.slug,
