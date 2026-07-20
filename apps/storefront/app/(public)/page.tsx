@@ -1,13 +1,6 @@
-import Categories from "@/components/home/Categories";
-import Features from "@/components/home/Features";
-import Hero from "@/components/home/Hero";
+import HomeSectionRenderer from "@/components/composition/HomeSectionRenderer";
+import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
 export default function HomePage() {
-  return (
-    <>
-      <Hero />
-      <Features />
-      <Categories />
-    </>
-  );
+  return <HomeSectionRenderer profile={getStorefrontProfile()} />;
 }

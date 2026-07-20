@@ -25,3 +25,11 @@ export type CapabilityAvailability = Readonly<{
   enabled: ReadonlySet<CommerceCapability>;
   implemented: ReadonlySet<CommerceCapability>;
 }>;
+
+export type FeatureProfile = Readonly<{
+  id: string;
+  version: number;
+  edition: CommerceEdition;
+  entitled: ReadonlySet<CommerceCapability>;
+  availability: CapabilityAvailability;
+}>;

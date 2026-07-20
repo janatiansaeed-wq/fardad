@@ -1,0 +1,89 @@
+import type { LocalizedContentProfile } from "@fardad/types";
+import { fardadNavigation } from "./navigation";
+
+export const fardadLocalizedContentProfile: LocalizedContentProfile = {
+  id: "fardad-fa",
+  version: 1,
+  approval: "provisional",
+  sourceVersion: "wo-011-legacy-reference",
+  locale: "fa-IR",
+  navigation: fardadNavigation,
+  shell: {
+    skipToContent: "پرش به محتوای اصلی",
+    primaryNavigationLabel: "ناوبری اصلی",
+    mobileMenuLabel: "منو",
+    footerDescription: "فرداد؛ روایتی معاصر از میراث صنایع دستی ایران و تجربه هدیه‌دادن.",
+  },
+  home: {
+    hero: {
+      eyebrow: "Persian Heritage Experience",
+      titleBeforeBreak: "هنر ایرانی،",
+      titleAfterBreak: "در روایتی ماندگار",
+      description: "تجربه‌ای برای کشف صنایع دستی ایرانی و نگاه هدیه‌محور فرداد.",
+      primaryAction: "مشاهده محصولات",
+      secondaryAction: "دریافت کاتالوگ",
+    },
+    features: {
+      title: "نگاه فرداد",
+      subtitle: "یک تجربه پیشنهادی با الهام از میراث، هدیه و جزئیات",
+      items: [
+        {
+          title: "میراث ایرانی",
+          description: "بازتاب هنر و روایت‌های ایرانی در تجربه معرفی محصولات.",
+        },
+        {
+          title: "نگاه هدیه‌محور",
+          description: "چیدمانی برای معرفی انتخاب‌ها در موقعیت‌های هدیه‌دادن.",
+        },
+        {
+          title: "جزئیات ماندگار",
+          description: "تمرکز بصری بر بافت، فرم و داستان هر اثر.",
+        },
+      ],
+    },
+    categories: {
+      title: "دسته‌بندی محصولات",
+      subtitle: "مسیرهای پیشنهادی برای مرور مجموعه فرداد",
+      items: ["فیروزه‌کوبی", "میناکاری", "خاتم‌کاری", "قلمزنی", "هدایای مدیریتی", "پک‌های هدیه"],
+    },
+  },
+  catalog: {
+    metadataTitle: "محصولات",
+    metadataDescription: "مرور محصولات قابل انتشار فرداد.",
+    heading: "محصولات",
+    introduction: "مرور محصولات قابل انتشار در مجموعه فرداد.",
+    categoryLabel: "دسته‌بندی محصولات",
+    categoryDescriptionTemplate: "محصولات دسته‌بندی {categoryName} در فرداد.",
+    categoryNavigationLabel: "دسته‌بندی محصولات",
+    emptyTitle: "هنوز محصولی برای نمایش وجود ندارد",
+    emptyCategoryTitleTemplate: "محصولی در {categoryName} یافت نشد",
+    emptyDescription: "به‌محض آماده شدن محصولات قابل انتشار، در این بخش نمایش داده می‌شوند.",
+    previousPage: "صفحه قبل",
+    nextPage: "صفحه بعد",
+    paginationLabel: "صفحه‌بندی محصولات",
+    missingImageAltTemplate: "تصویر محصول {productName} در دسترس نیست",
+    missingImageMark: "ف",
+    missingImageMessage: "تصویر محصول به‌زودی در دسترس خواهد بود",
+    loading: "در حال بارگذاری محصولات",
+  },
+  states: {
+    loadingTitle: "در حال بارگذاری",
+    loadingDescription: "لطفاً چند لحظه صبر کنید.",
+    globalErrorTitle: "خطایی رخ داد",
+    productsErrorTitle: "نمایش محصولات با مشکل روبه‌رو شد",
+    categoryErrorTitle: "نمایش این دسته‌بندی با مشکل روبه‌رو شد",
+    retryDescription: "لطفاً دوباره تلاش کنید.",
+    retryAction: "تلاش دوباره",
+    notFoundTitle: "صفحه موردنظر پیدا نشد",
+    notFoundDescription: "نشانی واردشده در دسترس نیست یا تغییر کرده است.",
+    homeAction: "بازگشت به خانه",
+  },
+  seo: {
+    defaultTitle: "فرداد",
+    titleTemplate: "%s | فرداد",
+    description: "تجربه فرداد برای مرور صنایع دستی ایرانی.",
+    robots: { index: true, follow: true },
+    openGraphLocale: "fa_IR",
+  },
+  provisionalFields: ["shell.footerDescription", "home", "catalog", "seo"],
+};

@@ -1,16 +1,23 @@
-import type { PublicProductCard as PublicProductCardData } from "@fardad/types";
+import type {
+  LocalizedContentProfile,
+  ProductCardVariantId,
+  PublicProductCard as PublicProductCardData,
+} from "@fardad/types";
 import Card from "@fardad/ui/Card";
 import Image from "@fardad/ui/Image";
 
 type ProductCardProps = {
   product: PublicProductCardData;
+  content: LocalizedContentProfile["catalog"];
+  variant: ProductCardVariantId;
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ content, product, variant }: ProductCardProps) {
   const titleId = `product-${product.slug}`;
+  const missingImageAlt = content.missingImageAltTemplate.replace("{productName}", product.name);
 
   return (
-    <article aria-labelledby={titleId}>
+    <article aria-labelledby={titleId} data-variant={variant}>
       <Card className="h-full">
         <div className="relative aspect-[4/3] overflow-hidden">
           {product.image ? (
@@ -24,14 +31,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           ) : (
             <div
               role="img"
-              aria-label={`تصویر محصول ${product.name} در دسترس نیست`}
+              aria-label={missingImageAlt}
               className="flex h-full items-center justify-center bg-[linear-gradient(135deg,var(--ui-color-primary,#1f2937),var(--ui-color-secondary,#e5e7eb))] p-6 text-center text-[var(--ui-color-primary-contrast,#ffffff)]"
             >
               <div>
                 <span aria-hidden="true" className="text-4xl font-bold">
-                  ف
+                  {content.missingImageMark}
                 </span>
-                <p className="mt-2 text-sm">تصویر محصول به‌زودی در دسترس خواهد بود</p>
+                <p className="mt-2 text-sm">{content.missingImageMessage}</p>
               </div>
             </div>
           )}

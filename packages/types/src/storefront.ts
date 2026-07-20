@@ -1,12 +1,10 @@
-import type { CapabilityAvailability } from "./capabilities";
+import type { BrandProfile, ContactInformation, PublicAssetReference, SocialLinks } from "./brand";
+import type { CapabilityAvailability, FeatureProfile } from "./capabilities";
+import type { LocalizedContentProfile } from "./content";
+import type { ExperienceProfile } from "./experience";
 import type { NavigationGroup, NavigationSource } from "./navigation";
-
-export type TextDirection = "ltr" | "rtl";
-
-export type PublicAssetReference = Readonly<{
-  src: string;
-  alt: string;
-}>;
+import type { SemanticDesignTokens, ThemePreset } from "./theme";
+import type { TextDirection } from "./brand";
 
 export type StoreIdentity = Readonly<{
   name: string;
@@ -14,54 +12,19 @@ export type StoreIdentity = Readonly<{
   locale: string;
   language: string;
   direction: TextDirection;
-  url: string;
+  url?: string;
   timezone?: string;
   currency?: string;
 }>;
 
-export type ContactInformation = Readonly<{
-  email?: string;
-  phone?: string;
-  mobile?: string;
-  address?: string;
-}>;
-
-export type SocialLinks = Readonly<{
-  instagram?: string;
-  telegram?: string;
-  whatsapp?: string;
-  linkedin?: string;
-  aparat?: string;
-}>;
-
-export type BrandProfile = Readonly<{
+export type ResolvedBrandProfile = Readonly<{
   displayName: string;
   slogan?: string;
   description: string;
   logo?: PublicAssetReference;
   contact: ContactInformation;
   social: SocialLinks;
-  copyright: string;
-}>;
-
-export type SemanticDesignTokens = Readonly<{
-  colors: Readonly<{
-    background: string;
-    surface: string;
-    text: string;
-    mutedText: string;
-    primary: string;
-    primaryContrast: string;
-    secondary: string;
-    secondaryContrast: string;
-    border: string;
-    focus: string;
-  }>;
-  radius: Readonly<{
-    small: string;
-    medium: string;
-  }>;
-  contentMaxWidth: string;
+  copyright?: string;
 }>;
 
 export type SeoDefaults = Readonly<{
@@ -81,10 +44,15 @@ export type SeoDefaults = Readonly<{
 
 export type StorefrontProfile = Readonly<{
   identity: StoreIdentity;
-  brand: BrandProfile;
+  brand: ResolvedBrandProfile;
   design: SemanticDesignTokens;
   seo: SeoDefaults;
   navigation: NavigationSource;
   footerNavigation?: readonly NavigationGroup[];
   capabilities: CapabilityAvailability;
+  theme: ThemePreset;
+  brandProfile: BrandProfile;
+  experience: ExperienceProfile;
+  feature: FeatureProfile;
+  content: LocalizedContentProfile;
 }>;

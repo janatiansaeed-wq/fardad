@@ -6,7 +6,6 @@ import {
   normalizeNavigationItems,
   resolveVisibleCapabilities,
 } from "@fardad/utils";
-import { fardadEntitledCapabilities } from "@/src/config/fardad-features";
 import { getStorefrontProfile } from "./storefront-config";
 
 export function resolveStorefrontNavigation(): NavigationItem[] {
@@ -17,7 +16,7 @@ export function resolveStorefrontNavigation(): NavigationItem[] {
   }
 
   const visibleCapabilities = resolveVisibleCapabilities(
-    fardadEntitledCapabilities,
+    profile.feature.entitled,
     profile.capabilities,
   );
 

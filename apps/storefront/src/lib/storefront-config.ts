@@ -1,8 +1,8 @@
 import "server-only";
 
 import type { StorefrontProfile } from "@fardad/types";
-import { fardadProfile } from "@/src/config/fardad-store";
+import { resolveStorefrontProfile } from "./resolve-storefront-profile";
 
 export function getStorefrontProfile(): StorefrontProfile {
-  return fardadProfile;
+  return resolveStorefrontProfile();
 }

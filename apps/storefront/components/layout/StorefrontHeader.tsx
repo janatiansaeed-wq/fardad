@@ -1,14 +1,17 @@
 import Link from "next/link";
+import type { StorefrontProfile } from "@fardad/types";
 import Navigation from "@fardad/ui/Navigation";
 import SiteHeader from "@fardad/ui/SiteHeader";
 import MobileNavigation from "./MobileNavigation";
 import { resolveStorefrontNavigation } from "@/src/lib/navigation";
-import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
-export default function StorefrontHeader() {
-  const profile = getStorefrontProfile();
+type StorefrontHeaderProps = Readonly<{
+  profile: StorefrontProfile;
+}>;
+
+export default function StorefrontHeader({ profile }: StorefrontHeaderProps) {
   const navigation = resolveStorefrontNavigation();
-  const navigationLabel = "ناوبری اصلی";
+  const { shell } = profile.content;
 
   return (
     <SiteHeader
@@ -20,8 +23,15 @@ export default function StorefrontHeader() {
           {profile.brand.displayName}
         </Link>
       }
-      navigation={<Navigation items={navigation} ariaLabel={navigationLabel} />}
-      actions={<MobileNavigation items={navigation} ariaLabel={navigationLabel} />}
+      navigation={<Navigation items={navigation} ariaLabel={shell.primaryNavigationLabel} />}
+      actions={
+        <MobileNavigation
+          items={navigation}
+          ariaLabel={shell.primaryNavigationLabel}
+          menuLabel={shell.mobileMenuLabel}
+          variant={profile.experience.mobileNavigation}
+        />
+      }
     />
   );
 }

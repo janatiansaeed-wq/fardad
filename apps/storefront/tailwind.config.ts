@@ -9,17 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: "#A97142",
-        copper: "#B87333",
-        dark: "#071310",
-        ivory: "#F8F4EC",
-        marble: "#ECE7DD",
-        primary: "#0E3B2E",
-        secondary: "#C2A46B",
+        background: "var(--ui-color-background)",
+        surface: "var(--ui-color-surface)",
+        foreground: "var(--ui-color-text)",
+        muted: "var(--ui-color-muted-text)",
+        primary: "var(--ui-color-primary)",
+        secondary: "var(--ui-color-secondary)",
+        focus: "var(--ui-color-focus)",
       },
       fontFamily: {
-        display: ["IRANYekanX", "sans-serif"],
-        sans: ["IRANYekanX", "sans-serif"],
+        display: ["var(--ui-font-display)", "sans-serif"],
+        sans: ["var(--ui-font-body)", "sans-serif"],
       },
     },
   },

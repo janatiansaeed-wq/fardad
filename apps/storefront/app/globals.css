@@ -21,8 +21,17 @@ body {
   padding: 0;
   background: var(--ui-color-background, #ffffff);
   color: var(--ui-color-text, #111827);
-  font-family: IRANYekanX, sans-serif;
+  font-family: var(--ui-font-body, system-ui, sans-serif);
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ui-font-display, var(--ui-font-body, system-ui, sans-serif));
 }
 
 :focus-visible {

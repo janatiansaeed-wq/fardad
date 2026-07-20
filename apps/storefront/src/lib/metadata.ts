@@ -3,7 +3,7 @@ import type { StorefrontProfile } from "@fardad/types";
 
 export function createStorefrontMetadata(profile: StorefrontProfile): Metadata {
   return {
-    metadataBase: new URL(profile.identity.url),
+    metadataBase: profile.identity.url ? new URL(profile.identity.url) : undefined,
     title: {
       default: profile.seo.defaultTitle,
       template: profile.seo.titleTemplate,

@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
-import type { NavigationItem } from "@fardad/types";
+import type { MobileNavigationVariantId, NavigationItem } from "@fardad/types";
 
 type MobileNavigationProps = {
   items: readonly NavigationItem[];
   ariaLabel: string;
+  menuLabel: string;
+  variant: MobileNavigationVariantId;
 };
 
-export default function MobileNavigation({ items, ariaLabel }: MobileNavigationProps) {
+export default function MobileNavigation({
+  items,
+  ariaLabel,
+  menuLabel,
+  variant,
+}: MobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
 
@@ -25,7 +32,7 @@ export default function MobileNavigation({ items, ariaLabel }: MobileNavigationP
   }, []);
 
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden" data-variant={variant}>
       <button
         type="button"
         aria-expanded={isOpen}
@@ -33,7 +40,7 @@ export default function MobileNavigation({ items, ariaLabel }: MobileNavigationP
         onClick={() => setIsOpen((current) => !current)}
         className="rounded-[var(--ui-radius-small,0.375rem)] border border-[var(--ui-color-border,#d1d5db)] px-4 py-2 text-sm font-medium text-[var(--ui-color-text,#111827)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-color-focus,#2563eb)] focus-visible:ring-offset-2"
       >
-        منو
+        {menuLabel}
       </button>
       {isOpen ? (
         <nav

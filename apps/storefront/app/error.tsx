@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Button from "@fardad/ui/Button";
 import PageState from "@fardad/ui/PageState";
+import { fardadLocalizedContentProfile } from "@/src/config/brands/fardad/content.fa";
 
 export default function GlobalError({
   error,
@@ -11,15 +12,17 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }>) {
+  const { states } = fardadLocalizedContentProfile;
+
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
     <PageState
-      title="خطایی رخ داد"
-      description="لطفاً دوباره تلاش کنید."
-      action={<Button onClick={reset}>تلاش دوباره</Button>}
+      title={states.globalErrorTitle}
+      description={states.retryDescription}
+      action={<Button onClick={reset}>{states.retryAction}</Button>}
     />
   );
 }

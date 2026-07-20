@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Button from "@fardad/ui/Button";
 import PageState from "@fardad/ui/PageState";
+import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
 export default function NotFound() {
+  const { states } = getStorefrontProfile().content;
+
   return (
     <PageState
-      title="صفحه موردنظر پیدا نشد"
-      description="نشانی واردشده در دسترس نیست یا تغییر کرده است."
+      title={states.notFoundTitle}
+      description={states.notFoundDescription}
       action={
         <Link href="/">
-          <Button>بازگشت به خانه</Button>
+          <Button>{states.homeAction}</Button>
         </Link>
       }
     />

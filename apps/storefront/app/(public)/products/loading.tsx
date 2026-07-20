@@ -1,10 +1,13 @@
 import Container from "@fardad/ui/Container";
+import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
 export default function ProductsLoading() {
+  const { catalog } = getStorefrontProfile().content;
+
   return (
     <Container className="py-12 lg:py-16">
       <section aria-busy="true" aria-live="polite">
-        <p className="sr-only">در حال بارگذاری محصولات</p>
+        <p className="sr-only">{catalog.loading}</p>
         <div className="h-10 w-48 animate-pulse rounded bg-[var(--ui-color-border,#d1d5db)]" />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }, (_, index) => (

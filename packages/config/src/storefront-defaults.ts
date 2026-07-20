@@ -20,5 +20,12 @@ export const defaultSemanticTokens: SemanticDesignTokens = {
     small: "0.375rem",
     medium: "0.75rem",
   },
+  typography: {
+    body: "system-sans",
+    display: "system-sans",
+  },
+  elevation: {
+    card: "soft",
+  },
   contentMaxWidth: "90rem",
 };

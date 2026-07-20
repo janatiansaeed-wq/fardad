@@ -3,15 +3,16 @@ import type { PublicCategorySummary } from "@fardad/types";
 
 type CategoryDiscoveryProps = {
   categories: readonly PublicCategorySummary[];
+  ariaLabel: string;
 };
 
-export default function CategoryDiscovery({ categories }: CategoryDiscoveryProps) {
+export default function CategoryDiscovery({ ariaLabel, categories }: CategoryDiscoveryProps) {
   if (!categories.length) {
     return null;
   }
 
   return (
-    <nav aria-label="دسته‌بندی محصولات" className="mb-10">
+    <nav aria-label={ariaLabel} className="mb-10">
       <ul className="flex flex-wrap gap-3">
         {categories.map((category) => (
           <li key={category.slug}>

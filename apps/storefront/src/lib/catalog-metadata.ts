@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fardadProfile } from "@/src/config/fardad-store";
+import { getStorefrontProfile } from "./storefront-config";
 
 type CatalogMetadataInput = {
   canonicalPath: string;
@@ -14,6 +14,7 @@ export function createCatalogMetadata({
   page,
   title,
 }: CatalogMetadataInput): Metadata {
+  const profile = getStorefrontProfile();
   const canonical = page === 1 ? canonicalPath : `${canonicalPath}?page=${page}`;
 
   return {
@@ -23,8 +24,8 @@ export function createCatalogMetadata({
     title,
     openGraph: {
       description,
-      locale: fardadProfile.seo.openGraph.locale,
-      siteName: fardadProfile.seo.openGraph.siteName,
+      locale: profile.seo.openGraph.locale,
+      siteName: profile.seo.openGraph.siteName,
       title,
       type: "website",
       url: canonical,

@@ -1,16 +1,24 @@
 import Link from "next/link";
-import type { CatalogPagination as CatalogPaginationData } from "@fardad/types";
+import type {
+  CatalogPagination as CatalogPaginationData,
+  LocalizedContentProfile,
+} from "@fardad/types";
 
 type CatalogPaginationProps = {
   basePath: string;
   pagination: CatalogPaginationData;
+  content: LocalizedContentProfile["catalog"];
 };
 
 function pageHref(basePath: string, page: number): string {
   return page === 1 ? basePath : `${basePath}?page=${page}`;
 }
 
-export default function CatalogPagination({ basePath, pagination }: CatalogPaginationProps) {
+export default function CatalogPagination({
+  basePath,
+  content,
+  pagination,
+}: CatalogPaginationProps) {
   if (pagination.totalPages <= 1) {
     return null;
   }
@@ -20,7 +28,7 @@ export default function CatalogPagination({ basePath, pagination }: CatalogPagin
   const pages = Array.from({ length: lastPage - firstPage + 1 }, (_, index) => firstPage + index);
 
   return (
-    <nav aria-label="صفحه‌بندی محصولات" className="mt-10">
+    <nav aria-label={content.paginationLabel} className="mt-10">
       <ul className="flex flex-wrap items-center justify-center gap-2">
         {pagination.page > 1 ? (
           <li>
@@ -28,7 +36,7 @@ export default function CatalogPagination({ basePath, pagination }: CatalogPagin
               href={pageHref(basePath, pagination.page - 1)}
               className="inline-flex min-h-11 items-center rounded-[var(--ui-radius-small,0.375rem)] border border-[var(--ui-color-border,#d1d5db)] px-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-color-focus,#2563eb)]"
             >
-              صفحه قبل
+              {content.previousPage}
             </Link>
           </li>
         ) : null}
@@ -69,7 +77,7 @@ export default function CatalogPagination({ basePath, pagination }: CatalogPagin
               href={pageHref(basePath, pagination.page + 1)}
               className="inline-flex min-h-11 items-center rounded-[var(--ui-radius-small,0.375rem)] border border-[var(--ui-color-border,#d1d5db)] px-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-color-focus,#2563eb)]"
             >
-              صفحه بعد
+              {content.nextPage}
             </Link>
           </li>
         ) : null}

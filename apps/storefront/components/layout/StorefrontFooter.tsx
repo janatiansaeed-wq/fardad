@@ -1,8 +1,11 @@
+import type { StorefrontProfile } from "@fardad/types";
 import SiteFooter from "@fardad/ui/SiteFooter";
-import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
-export default function StorefrontFooter() {
-  const profile = getStorefrontProfile();
+type StorefrontFooterProps = Readonly<{
+  profile: StorefrontProfile;
+}>;
+
+export default function StorefrontFooter({ profile }: StorefrontFooterProps) {
   const { brand } = profile;
 
   return (
@@ -25,7 +28,7 @@ export default function StorefrontFooter() {
           ) : null}
         </div>
       }
-      legal={brand.copyright}
+      legal={brand.copyright ?? null}
     />
   );
 }

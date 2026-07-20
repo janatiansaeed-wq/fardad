@@ -10,6 +10,7 @@ import {
   normalizeCatalogPage,
   PublicCatalogNotFoundError,
 } from "@/src/lib/api/public-catalog";
+import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
 type CategoryProductsPageProps = {
   params: Promise<{ slug: string }>;
@@ -45,9 +46,13 @@ export async function generateMetadata(props: CategoryProductsPageProps): Promis
     notFound();
   }
 
+  const content = getStorefrontProfile().content.catalog;
+
   return createCatalogMetadata({
     canonicalPath: `/products/category/${slug}`,
-    description: category.description ?? `محصولات دسته‌بندی ${category.name} در فرداد.`,
+    description:
+      category.description ??
+      content.categoryDescriptionTemplate.replace("{categoryName}", category.name),
     page: currentPage,
     title: category.name,
   });
@@ -61,10 +66,15 @@ export default async function CategoryProductsPage(props: CategoryProductsPagePr
     notFound();
   }
 
+  const profile = getStorefrontProfile();
+  const content = profile.content.catalog;
+
   return (
     <Container className="py-12 lg:py-16">
       <header className="mb-10 max-w-3xl">
-        <p className="text-sm font-medium text-[var(--ui-color-muted-text,#4b5563)]">دسته‌بندی محصولات</p>
+        <p className="text-sm font-medium text-[var(--ui-color-muted-text,#4b5563)]">
+          {content.categoryLabel}
+        </p>
         <h1 className="mt-2 text-4xl font-bold text-[var(--ui-color-primary,#1f2937)]">
           {category.name}
         </h1>
@@ -77,14 +87,19 @@ export default async function CategoryProductsPage(props: CategoryProductsPagePr
 
       {catalog.items.length ? (
         <>
-          <ProductGrid products={catalog.items} />
+          <ProductGrid
+            products={catalog.items}
+            content={content}
+            variant={profile.experience.productCard}
+          />
           <CatalogPagination
             basePath={`/products/category/${slug}`}
+            content={content}
             pagination={catalog.pagination}
           />
         </>
       ) : (
-        <CatalogEmptyState categoryName={category.name} />
+        <CatalogEmptyState categoryName={category.name} content={content} />
       )}
     </Container>
   );

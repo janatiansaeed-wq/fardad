@@ -10,6 +10,7 @@ import {
   getPublicProducts,
   normalizeCatalogPage,
 } from "@/src/lib/api/public-catalog";
+import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
 type ProductsPageProps = {
   searchParams: Promise<{ page?: string | string[] }>;
@@ -20,18 +21,21 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
   const { page } = await searchParams;
   const currentPage = normalizeCatalogPage(page);
+  const { catalog } = getStorefrontProfile().content;
 
   return createCatalogMetadata({
     canonicalPath: "/products",
-    description: "مشاهده مجموعه‌ای از محصولات صنایع دستی اصیل و لوکس فرداد.",
+    description: catalog.metadataDescription,
     page: currentPage,
-    title: "محصولات",
+    title: catalog.metadataTitle,
   });
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const { page } = await searchParams;
   const currentPage = normalizeCatalogPage(page);
+  const profile = getStorefrontProfile();
+  const content = profile.content.catalog;
   const [catalog, categories] = await Promise.all([
     getPublicProducts(currentPage),
     getPublicCategories(),
@@ -40,21 +44,31 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   return (
     <Container className="py-12 lg:py-16">
       <header className="mb-8 max-w-3xl">
-        <h1 className="text-4xl font-bold text-[var(--ui-color-primary,#1f2937)]">محصولات</h1>
+        <h1 className="text-4xl font-bold text-[var(--ui-color-primary,#1f2937)]">
+          {content.heading}
+        </h1>
         <p className="mt-4 leading-8 text-[var(--ui-color-muted-text,#4b5563)]">
-          مجموعه‌ای از صنایع دستی اصیل ایرانی با کیفیت و جزئیات ماندگار.
+          {content.introduction}
         </p>
       </header>
 
-      <CategoryDiscovery categories={categories} />
+      <CategoryDiscovery categories={categories} ariaLabel={content.categoryNavigationLabel} />
 
       {catalog.items.length ? (
         <>
-          <ProductGrid products={catalog.items} />
-          <CatalogPagination basePath="/products" pagination={catalog.pagination} />
+          <ProductGrid
+            products={catalog.items}
+            content={content}
+            variant={profile.experience.productCard}
+          />
+          <CatalogPagination
+            basePath="/products"
+            content={content}
+            pagination={catalog.pagination}
+          />
         </>
       ) : (
-        <CatalogEmptyState />
+        <CatalogEmptyState content={content} />
       )}
     </Container>
   );
