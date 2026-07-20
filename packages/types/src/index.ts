@@ -2,6 +2,7 @@ export * from "./api";
 export * from "./brand";
 export * from "./capabilities";
 export * from "./catalog";
+export * from "./commerce";
 export * from "./content";
 export * from "./experience";
 export * from "./navigation";

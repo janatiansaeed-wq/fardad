@@ -13,6 +13,12 @@ export const envSchema = z
     API_PORT: z.coerce.number().int().min(1).max(65_535).default(4000),
     AUTH_LOGIN_LOCK_MINUTES: z.coerce.number().int().min(1).max(1_440).default(15),
     AUTH_MAX_LOGIN_ATTEMPTS: z.coerce.number().int().min(1).max(20).default(5),
+    COMMERCE_STORE_KEY: z
+      .string()
+      .min(1)
+      .max(100)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    COMMERCE_BFF_SHARED_SECRET: z.string().min(32),
     DATABASE_URL: z.string().url(),
     JWT_ACCESS_SECRET: z.string().min(32),
     JWT_ACCESS_TTL_SECONDS: z.coerce.number().int().min(60).max(3_600).default(900),

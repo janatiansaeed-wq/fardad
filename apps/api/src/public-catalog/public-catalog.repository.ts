@@ -123,7 +123,10 @@ export class PublicCatalogRepository {
   }
 }
 
-function publicProductLifecycleWhere(now: Date, categorySlug?: string): Prisma.ProductWhereInput {
+export function publicProductLifecycleWhere(
+  now: Date,
+  categorySlug?: string,
+): Prisma.ProductWhereInput {
   return {
     category: {
       is: {
