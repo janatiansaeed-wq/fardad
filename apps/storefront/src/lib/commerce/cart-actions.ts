@@ -2,10 +2,12 @@
 
 import { randomBytes } from "node:crypto";
 import { cookies, headers } from "next/headers";
-import type { AddCartLineInput, SetCartLineQuantityInput } from "@fardad/types";
+import type { AddCartLineInput, PublicCart, SetCartLineQuantityInput } from "@fardad/types";
 import {
   addGuestCartLine,
   createGuestCart,
+  getGuestCart,
+  PublicCommerceConflictError,
   PublicCommerceRequestError,
   refreshGuestCartQuote,
   removeGuestCartLine,
@@ -18,47 +20,117 @@ import {
   isGuestCartToken,
 } from "./cart-cookie";
 
-export async function createGuestCartAction(): Promise<void> {
-  await assertSameOriginMutation();
-  await getOrCreateToken();
+export type CartActionResult =
+  | Readonly<{ cart: PublicCart; status: "success" }>
+  | Readonly<{
+      cart: PublicCart | null;
+      status: "failure";
+      reason: "cart-expired" | "generic" | "quantity" | "revision-conflict" | "unavailable";
+    }>;
+
+export async function createGuestCartAction(): Promise<CartActionResult> {
+  return executeCartAction(async (setToken) => {
+    const token = await getOrCreateToken();
+    setToken(token);
+    return token;
+  });
 }
 
-export async function addGuestCartLineAction(
-  input: AddCartLineInput,
-  revision: number,
-): Promise<void> {
-  await assertSameOriginMutation();
-  const token = await getOrCreateToken();
-  await addGuestCartLine(token, revision, generateIdempotencyKey(), input);
-  await refreshCookie(token);
+export async function addGuestCartLineAction(input: AddCartLineInput): Promise<CartActionResult> {
+  return executeCartAction(async (setToken) => {
+    const token = await getOrCreateToken();
+    setToken(token);
+    const cart = await getGuestCart(token);
+    await addGuestCartLine(token, cart.revision, generateIdempotencyKey(), input);
+    return token;
+  });
 }
 
 export async function setGuestCartLineQuantityAction(
   lineReference: string,
   input: SetCartLineQuantityInput,
   revision: number,
-): Promise<void> {
-  await assertSameOriginMutation();
-  const token = await requireToken();
-  await setGuestCartLineQuantity(token, lineReference, revision, generateIdempotencyKey(), input);
-  await refreshCookie(token);
+): Promise<CartActionResult> {
+  return executeCartAction(async (setToken) => {
+    const token = await requireToken();
+    setToken(token);
+    await setGuestCartLineQuantity(token, lineReference, revision, generateIdempotencyKey(), input);
+    return token;
+  });
 }
 
 export async function removeGuestCartLineAction(
   lineReference: string,
   revision: number,
-): Promise<void> {
-  await assertSameOriginMutation();
-  const token = await requireToken();
-  await removeGuestCartLine(token, lineReference, revision, generateIdempotencyKey());
-  await refreshCookie(token);
+): Promise<CartActionResult> {
+  return executeCartAction(async (setToken) => {
+    const token = await requireToken();
+    setToken(token);
+    await removeGuestCartLine(token, lineReference, revision, generateIdempotencyKey());
+    return token;
+  });
 }
 
-export async function refreshGuestCartQuoteAction(revision: number): Promise<void> {
-  await assertSameOriginMutation();
-  const token = await requireToken();
-  await refreshGuestCartQuote(token, revision, generateIdempotencyKey());
-  await refreshCookie(token);
+export async function refreshGuestCartQuoteAction(revision: number): Promise<CartActionResult> {
+  return executeCartAction(async (setToken) => {
+    const token = await requireToken();
+    setToken(token);
+    await refreshGuestCartQuote(token, revision, generateIdempotencyKey());
+    return token;
+  });
+}
+
+async function executeCartAction(
+  operation: (setToken: (token: string) => void) => Promise<string>,
+): Promise<CartActionResult> {
+  let token: string | undefined;
+
+  try {
+    await assertSameOriginMutation();
+    token = await operation((currentToken) => {
+      token = currentToken;
+    });
+    await refreshCookie(token);
+    return { cart: await getGuestCart(token), status: "success" };
+  } catch (error) {
+    return {
+      cart: token ? await readCartAfterFailure(token) : null,
+      reason: mapCartActionFailure(error),
+      status: "failure",
+    };
+  }
+}
+
+async function readCartAfterFailure(token: string): Promise<PublicCart | null> {
+  try {
+    return await getGuestCart(token);
+  } catch {
+    return null;
+  }
+}
+
+function mapCartActionFailure(
+  error: unknown,
+): Extract<CartActionResult, { status: "failure" }>["reason"] {
+  if (error instanceof PublicCommerceConflictError) {
+    return "revision-conflict";
+  }
+
+  if (error instanceof PublicCommerceRequestError) {
+    switch (error.code) {
+      case "CART_EXPIRED":
+        return "cart-expired";
+      case "PRODUCT_UNAVAILABLE":
+        return "unavailable";
+      case "QUANTITY_NOT_ALLOWED":
+      case "CART_LIMIT_REACHED":
+        return "quantity";
+      default:
+        return "generic";
+    }
+  }
+
+  return "generic";
 }
 
 async function getOrCreateToken(): Promise<string> {

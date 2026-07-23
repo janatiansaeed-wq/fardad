@@ -21,6 +21,6 @@ export const fardadFeatureProfile: FeatureProfile = {
     ]),
     // Only routes with a publishable storefront implementation are exposed.
     // Product Experience extensions remain unavailable until their public flows exist.
-    implemented: new Set(["catalog.products"]),
+    implemented: new Set(["catalog.products", "catalog.shop"]),
   },
 };

@@ -9,6 +9,12 @@ export const fardadNavigation: readonly NavigationItem[] = [
     requiresAllCapabilities: ["catalog.products"],
   },
   {
+    id: "cart",
+    label: "سبد خرید",
+    href: "/cart",
+    requiresAllCapabilities: ["catalog.shop"],
+  },
+  {
     id: "corporate-gifts",
     label: "هدایای سازمانی",
     href: "/corporate-gifts",

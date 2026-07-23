@@ -3,17 +3,29 @@ import type {
   LayoutDensityId,
   LocalizedContentProfile,
   PublicProductDetail as PublicProductDetailData,
+  PublicPurchasingOption,
 } from "@fardad/types";
+import ProductPurchaseControl from "@/components/commerce/ProductPurchaseControl";
 import Container from "@fardad/ui/Container";
 import ProductMediaGallery from "./ProductMediaGallery";
 
 type ProductDetailProps = Readonly<{
   content: LocalizedContentProfile["productDetail"];
   density: LayoutDensityId;
+  isShoppingPublished: boolean;
   product: PublicProductDetailData;
+  purchasingOption: PublicPurchasingOption | null;
+  locale: string;
 }>;
 
-export default function ProductDetail({ content, density, product }: ProductDetailProps) {
+export default function ProductDetail({
+  content,
+  density,
+  isShoppingPublished,
+  locale,
+  product,
+  purchasingOption,
+}: ProductDetailProps) {
   const descriptionHeadingId = `product-description-${product.slug}`;
 
   return (
@@ -72,6 +84,13 @@ export default function ProductDetail({ content, density, product }: ProductDeta
           <p className="mt-7 text-lg leading-9 text-[var(--ui-color-text,#111827)]">
             {product.shortDescription}
           </p>
+
+          <ProductPurchaseControl
+            content={content.purchase}
+            isShoppingPublished={isShoppingPublished}
+            locale={locale}
+            purchasingOption={purchasingOption}
+          />
 
           <section
             aria-labelledby={descriptionHeadingId}

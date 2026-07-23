@@ -63,6 +63,44 @@ export type LocalizedContentProfile = Readonly<{
     missingImageMessage: string;
     loading: string;
     errorTitle: string;
+    purchase: Readonly<{
+      addToCart: string;
+      cartableDescription: string;
+      unavailableDescription: string;
+      quantityLabel: string;
+      viewCart: string;
+      addingToCart: string;
+      purchaseError: string;
+    }>;
+  }>;
+  cart: Readonly<{
+    metadataTitle: string;
+    metadataDescription: string;
+    heading: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    continueShopping: string;
+    linesHeading: string;
+    quantityLabel: string;
+    updateQuantity: string;
+    removeLine: string;
+    refreshQuote: string;
+    subtotalLabel: string;
+    quoteFresh: string;
+    quoteNeedsRefresh: string;
+    lineUnavailable: string;
+    lineNeedsRefresh: string;
+    loading: string;
+    errorTitle: string;
+    errorDescription: string;
+    retryAction: string;
+    updatedMessage: string;
+    expiredMessage: string;
+    unavailableMessage: string;
+    quantityMessage: string;
+    conflictMessage: string;
+    failureMessage: string;
+    workingMessage: string;
   }>;
   states: Readonly<{
     loadingTitle: string;

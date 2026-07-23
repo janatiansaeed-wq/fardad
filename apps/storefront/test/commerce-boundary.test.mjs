@@ -39,15 +39,59 @@ test("guest Cart cookie is host-only, secure, HttpOnly, SameSite Lax, and bounde
   assert.doesNotMatch(cookie, /domain:/i);
 });
 
-test("public Product contracts and capability publication remain commerce-free", () => {
+test("public catalog contracts remain commerce-free while shop publication is capability-gated", () => {
   const catalog = read("packages/types/src/catalog.ts");
   const features = read("apps/storefront/src/config/brands/fardad/feature-profile.ts");
+  const navigation = read("apps/storefront/src/config/brands/fardad/navigation.ts");
+  const capability = read("apps/storefront/src/lib/shop-capability.ts");
+  const cartPage = read("apps/storefront/app/(public)/cart/page.tsx");
+  const session = read("apps/storefront/src/lib/commerce/cart-session.ts");
   assert.doesNotMatch(catalog, /price|availability|stock|cart/i);
-  assert.match(features, /implemented: new Set\(\["catalog\.products"\]\)/);
+  assert.match(features, /implemented: new Set\(\["catalog\.products", "catalog\.shop"\]\)/);
+  assert.match(navigation, /href: "\/cart"/);
+  assert.match(navigation, /requiresAllCapabilities: \["catalog\.shop"\]/);
+  assert.match(capability, /resolveVisibleCapabilities/);
+  assert.match(capability, /isCapabilityVisible/);
+  assert.match(cartPage, /isShopPublished/);
+  assert.match(cartPage, /notFound\(\)/);
+  assert.match(session, /getCurrentGuestCartState/);
+  assert.match(session, /error\.code === "CART_EXPIRED"/);
+});
+
+test("Cart route provides route-local loading, error, empty, and populated states", () => {
+  const experience = read("apps/storefront/components/commerce/CartExperience.tsx");
+  assert.equal(existsSync(join(workspaceRoot, "apps/storefront/app/(public)/cart/page.tsx")), true);
   assert.equal(
-    existsSync(join(workspaceRoot, "apps/storefront/app/(public)/cart/page.tsx")),
-    false,
+    existsSync(join(workspaceRoot, "apps/storefront/app/(public)/cart/loading.tsx")),
+    true,
   );
+  assert.equal(
+    existsSync(join(workspaceRoot, "apps/storefront/app/(public)/cart/error.tsx")),
+    true,
+  );
+  assert.match(experience, /cart\.status === "expired"/);
+  assert.match(experience, /cart\.lines\.length === 0/);
+  assert.match(experience, /setGuestCartLineQuantityAction/);
+  assert.match(experience, /removeGuestCartLineAction/);
+  assert.match(experience, /refreshGuestCartQuoteAction/);
+  assert.match(experience, /aria-live="polite"/);
+});
+
+test("client commerce controls use Server Actions and keep private commerce values out of client code", () => {
+  const purchase = read("apps/storefront/components/commerce/ProductPurchaseControl.tsx");
+  const cart = read("apps/storefront/components/commerce/CartExperience.tsx");
+  for (const source of [purchase, cart]) {
+    assert.match(source, /^"use client";/);
+    assert.doesNotMatch(
+      source,
+      /STOREFRONT_API_BASE_URL|COMMERCE_BFF|x-fardad-commerce|x-fardad-cart-token|offerId|storeId|apiBaseUrl/i,
+    );
+    assert.doesNotMatch(source, /CART_EXPIRED|PRODUCT_UNAVAILABLE|QUANTITY_NOT_ALLOWED/i);
+  }
+  assert.match(purchase, /addGuestCartLineAction/);
+  assert.match(cart, /refreshGuestCartQuoteAction/);
+  assert.match(cart, /revision-conflict/);
+  assert.match(cart, /cart-expired/);
 });
 
 test("public commerce contracts omit internal ownership and persistence fields", () => {
