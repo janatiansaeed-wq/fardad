@@ -43,6 +43,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma client
+        env:
+          DATABASE_URL: postgresql://fardad:fardad@localhost:5432/fardad_ci
+        run: pnpm db:generate
+
       - name: Type-check
         run: pnpm typecheck
 
