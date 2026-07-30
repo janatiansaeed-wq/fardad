@@ -7,7 +7,7 @@ import { fardadLocalizedContentProfile } from "./content.fa";
 
 export const fardadStorefrontComposition: StorefrontComposition = {
   id: "fardad-production",
-  version: 1,
+  version: 2,
   theme: getThemePreset("luxury-heritage"),
   brand: fardadBrandProfile,
   experience: fardadExperienceProfile,

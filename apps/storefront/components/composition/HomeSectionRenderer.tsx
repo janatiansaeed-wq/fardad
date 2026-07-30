@@ -1,5 +1,8 @@
 import type { HomeSectionId, StorefrontProfile } from "@fardad/types";
 import Categories from "@/components/home/Categories";
+import CorporateGifting from "@/components/home/CorporateGifting";
+import EditorialStories from "@/components/home/EditorialStories";
+import FeaturedShowcase from "@/components/home/FeaturedShowcase";
 import Features from "@/components/home/Features";
 import Hero from "@/components/home/Hero";
 
@@ -37,5 +40,12 @@ function renderSection(section: HomeSectionId, profile: StorefrontProfile) {
 }
 
 export default function HomeSectionRenderer({ profile }: HomeSectionRendererProps) {
-  return <>{profile.experience.home.sections.map((section) => renderSection(section, profile))}</>;
+  return (
+    <>
+      {profile.experience.home.sections.map((section) => renderSection(section, profile))}
+      <FeaturedShowcase />
+      <CorporateGifting />
+      <EditorialStories />
+    </>
+  );
 }

@@ -3,9 +3,9 @@ import { fardadNavigation } from "./navigation";
 
 export const fardadLocalizedContentProfile: LocalizedContentProfile = {
   id: "fardad-fa",
-  version: 1,
+  version: 2,
   approval: "provisional",
-  sourceVersion: "wo-011-legacy-reference",
+  sourceVersion: "wo-045-two-day-delivery",
   locale: "fa-IR",
   navigation: fardadNavigation,
   shell: {
@@ -19,31 +19,35 @@ export const fardadLocalizedContentProfile: LocalizedContentProfile = {
       eyebrow: "Persian Heritage Experience",
       titleBeforeBreak: "هنر ایرانی،",
       titleAfterBreak: "در روایتی ماندگار",
-      description: "تجربه‌ای برای کشف صنایع دستی ایرانی و نگاه هدیه‌محور فرداد.",
+      description:
+        "فرداد، ویترینی معاصر برای کشف صنایع دستی ایرانی، هدیه‌های سازمانی و ارائه‌هایی است که با دقت و معنا شکل می‌گیرند.",
       primaryAction: "مشاهده محصولات",
       secondaryAction: "دریافت کاتالوگ",
     },
     features: {
-      title: "نگاه فرداد",
-      subtitle: "یک تجربه پیشنهادی با الهام از میراث، هدیه و جزئیات",
+      title: "هدیه، با نگاهی سنجیده",
+      subtitle: "سه جهت‌گیری پیشنهادی برای تجربه‌ای متناسب، ایرانی و شایسته در فرداد",
       items: [
         {
-          title: "میراث ایرانی",
-          description: "بازتاب هنر و روایت‌های ایرانی در تجربه معرفی محصولات.",
+          title: "متناسب با شأن مخاطب",
+          description:
+            "توجه به موقعیت، نوع ارتباط و لحن هدیه، برای نزدیک‌شدن به انتخابی سنجیده و محترمانه.",
         },
         {
-          title: "نگاه هدیه‌محور",
-          description: "چیدمانی برای معرفی انتخاب‌ها در موقعیت‌های هدیه‌دادن.",
+          title: "هنر ایرانی، ارائه‌ای شایسته",
+          description:
+            "ترکیب روایت هنر ایرانی با چیدمانی آرام و امروزی، با تمرکز بر فرم، بافت و جزئیات.",
         },
         {
-          title: "جزئیات ماندگار",
-          description: "تمرکز بصری بر بافت، فرم و داستان هر اثر.",
+          title: "نگاه به شخصی‌سازی سازمانی",
+          description:
+            "مسیری پیشنهادی برای هماهنگ‌کردن شیوه ارائه هدیه با مناسبت و هویت سازمانی.",
         },
       ],
     },
     categories: {
-      title: "دسته‌بندی محصولات",
-      subtitle: "مسیرهای پیشنهادی برای مرور مجموعه فرداد",
+      title: "شش مسیر برای کشف هنر ایرانی",
+      subtitle: "از رنگ و فلز تا چوب و نقش؛ نگاهی تصویری به زمینه‌های هنری و هدیه‌محور فرداد",
       items: ["فیروزه‌کوبی", "میناکاری", "خاتم‌کاری", "قلمزنی", "هدایای مدیریتی", "پک‌های هدیه"],
     },
   },

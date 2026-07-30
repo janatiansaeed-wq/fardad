@@ -9,6 +9,7 @@ import {
   getPublicCategories,
   getPublicProducts,
   normalizeCatalogPage,
+  PublicCatalogRequestError,
 } from "@/src/lib/api/public-catalog";
 import { getStorefrontProfile } from "@/src/lib/storefront-config";
 
@@ -17,6 +18,23 @@ type ProductsPageProps = {
 };
 
 export const dynamic = "force-dynamic";
+
+async function getCatalogPageData(page: number) {
+  try {
+    const [catalog, categories] = await Promise.all([
+      getPublicProducts(page),
+      getPublicCategories(),
+    ]);
+
+    return { catalog, categories };
+  } catch (error) {
+    if (error instanceof PublicCatalogRequestError) {
+      return null;
+    }
+
+    throw error;
+  }
+}
 
 export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
   const { page } = await searchParams;
@@ -36,10 +54,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const currentPage = normalizeCatalogPage(page);
   const profile = getStorefrontProfile();
   const content = profile.content.catalog;
-  const [catalog, categories] = await Promise.all([
-    getPublicProducts(currentPage),
-    getPublicCategories(),
-  ]);
+  const pageData = await getCatalogPageData(currentPage);
+  const catalog = pageData?.catalog;
 
   return (
     <Container className="py-12 lg:py-16">
@@ -52,9 +68,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </p>
       </header>
 
-      <CategoryDiscovery categories={categories} ariaLabel={content.categoryNavigationLabel} />
+      <CategoryDiscovery
+        categories={pageData?.categories ?? []}
+        ariaLabel={content.categoryNavigationLabel}
+      />
 
-      {catalog.items.length ? (
+      {catalog?.items.length ? (
         <>
           <ProductGrid
             products={catalog.items}

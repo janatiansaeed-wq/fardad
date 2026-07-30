@@ -2,12 +2,12 @@ import type { ExperienceProfile } from "@fardad/types";
 
 export const fardadExperienceProfile: ExperienceProfile = {
   id: "fardad-luxury-heritage",
-  version: 1,
+  version: 2,
   approval: "provisional",
-  sourceVersion: "wo-011-legacy-reference",
+  sourceVersion: "wo-043b-1-visual-foundation",
   themePreset: {
     id: "luxury-heritage",
-    version: 1,
+    version: 2,
   },
   shell: "standard",
   home: {
