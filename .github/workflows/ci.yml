@@ -23,16 +23,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: pnpm
 
-      - name: Enable pnpm 10
+      - name: Verify toolchain
         run: |
-          corepack enable
-          corepack prepare pnpm@10.0.0 --activate
+          node --version
           pnpm --version
 
       - name: Install dependencies
