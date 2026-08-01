@@ -10,7 +10,7 @@ Status: `AUTHORIZED`
 - Base branch: `architecture-refactor`
 - Task branch: `task/mt-db-001-prisma-nullability-drift`
 - Authored against commit: `6beb5b19b997954bc24d8b3ba73d795494903194`
-- Publication permission: Codex may commit, push the task branch, and open a Draft PR. Codex may not merge.
+- Publication permission: Codex may create the task branch, commit, and push it with standard Git commands. Codex must not use `gh`, `github:yeet`, or any PR-creation skill. ChatGPT will create the Draft PR after the branch is pushed. Codex may not merge.
 
 ## Current problem
 
@@ -55,6 +55,9 @@ Create one safe forward-only corrective migration and an automated fresh-Postgre
 - No production/staging database connection or deployment
 - No destructive Git operation, force push, reset, clean, automatic stash, rebase, or merge
 - No `git add .`, `git add -A`, or `git commit -a`
+- No GitHub CLI (`gh`)
+- No `github:yeet` or other PR-publication skill
+- Do not stop merely because GitHub CLI is unavailable
 
 ## Execution steps
 
@@ -71,7 +74,14 @@ Create one safe forward-only corrective migration and an automated fresh-Postgre
 7. The CI migration gate must create a clean database from migration history, run Prisma validation/generation, and prove there is no schema drift after deployment.
 8. Run local safe validations supported by the environment. If Docker/PostgreSQL is unavailable locally, record that limitation but do not weaken the GitHub CI gate.
 9. Update the durable report and `docs/codex/status/latest.md`. Put only unresolved blocking decisions in `pending.md`; otherwise retain `Status: NONE`.
-10. Explicitly stage only allowed paths, commit, push the task branch, and open a Draft PR targeting `architecture-refactor`.
+10. Explicitly stage only allowed paths and create one scoped commit.
+11. Push the task branch using standard Git only:
+
+```powershell
+git push -u origin task/mt-db-001-prisma-nullability-drift
+```
+
+12. Do not attempt to create a PR. Return the pushed branch and commit SHA; ChatGPT will create the Draft PR through the connected GitHub service.
 
 ## Acceptance criteria
 
@@ -82,15 +92,15 @@ Create one safe forward-only corrective migration and an automated fresh-Postgre
 - Existing null category names are never silently backfilled; the migration emits a clear failure.
 - Prisma validate and generate pass.
 - Type-check, lint, tests, build, and `git diff --check` pass.
-- GitHub CI includes and passes the fresh-database migration-convergence gate.
+- GitHub CI includes the fresh-database migration-convergence gate; final pass will be verified after ChatGPT creates the Draft PR.
 - No files outside the allowlist change.
-- Draft PR links Issue `#2` and clearly documents rollback/operational implications.
+- The durable report clearly documents rollback and operational implications.
 
 ## Required validation
 
 - Prisma schema validation
 - Prisma client generation
-- Fresh PostgreSQL `prisma migrate deploy`
+- Fresh PostgreSQL `prisma migrate deploy` when locally available
 - A supported Prisma migration-diff/convergence command selected from local CLI help
 - Verification queries for both affected column nullability states
 - Type-check all workspaces
@@ -113,16 +123,16 @@ This is a forward migration. Do not edit or delete it after publication. Before 
 
 ## Completion output
 
-Codex must update `docs/codex/status/latest.md`, push the task branch, open a Draft PR, and return only:
+Codex must update `docs/codex/status/latest.md`, push the task branch with standard Git, and return only:
 
 - Task ID
 - Branch
 - Base commit
 - Result commit
-- Draft PR number and URL
+- Push result
 - Changed files
 - Migration verification result
 - Type-check/lint/test/build results
 - Working-tree status
 - Pending decisions
-- Final conclusion
+- Final conclusion: `TASK BRANCH PUSHED — READY FOR CHATGPT PR CREATION`
