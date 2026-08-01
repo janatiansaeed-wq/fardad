@@ -19,6 +19,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fardad_ci
+          POSTGRES_USER: fardad
+          POSTGRES_PASSWORD: fardad
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fardad -d fardad_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +47,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           cache: pnpm
 
       - name: Verify toolchain
@@ -43,10 +58,45 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate Prisma schema
+        env:
+          DATABASE_URL: postgresql://fardad:fardad@localhost:5432/fardad_ci
+        run: pnpm db:validate
+
       - name: Generate Prisma client
         env:
           DATABASE_URL: postgresql://fardad:fardad@localhost:5432/fardad_ci
         run: pnpm db:generate
+
+      - name: Deploy migrations and verify Prisma convergence
+        env:
+          DATABASE_URL: postgresql://fardad:fardad@localhost:5432/fardad_ci
+        run: |
+          pnpm db:migrate:deploy
+
+          postgres_container_id="$(docker ps --filter "ancestor=postgres:16-alpine" --format "{{.ID}}" | head -n 1)"
+          if [[ -z "$postgres_container_id" ]]; then
+            echo "PostgreSQL service container was not found"
+            exit 1
+          fi
+
+          product_name_nullable="$(docker exec --env PGPASSWORD=fardad "$postgres_container_id" psql --host 127.0.0.1 --username fardad --dbname fardad_ci --no-psqlrc --set ON_ERROR_STOP=1 --tuples-only --no-align --command "SELECT is_nullable FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'products' AND column_name = 'name';" | tr -d '[:space:]')"
+          category_name_nullable="$(docker exec --env PGPASSWORD=fardad "$postgres_container_id" psql --host 127.0.0.1 --username fardad --dbname fardad_ci --no-psqlrc --set ON_ERROR_STOP=1 --tuples-only --no-align --command "SELECT is_nullable FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'product_categories' AND column_name = 'name';" | tr -d '[:space:]')"
+
+          if [[ "$product_name_nullable" != "YES" ]]; then
+            echo "Expected products.name to be nullable; information_schema returned: $product_name_nullable"
+            exit 1
+          fi
+
+          if [[ "$category_name_nullable" != "NO" ]]; then
+            echo "Expected product_categories.name to be NOT NULL; information_schema returned: $category_name_nullable"
+            exit 1
+          fi
+
+          pnpm --filter @fardad/api exec prisma migrate diff \
+            --from-url "$DATABASE_URL" \
+            --to-schema-datamodel prisma/schema.prisma \
+            --exit-code
 
       - name: Type-check
         run: pnpm typecheck
